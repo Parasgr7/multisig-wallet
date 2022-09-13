@@ -2,10 +2,8 @@ import React from "react";
 import { Menu } from '@headlessui/react'
 import Link from 'next/link';
 
-
-
 export default function Navbar({accountAddress, balance}) {
-
+  const account_address = accountAddress.hooks.useAccount()
   return (
     <>
       <nav className="bg-gray-800">
@@ -32,14 +30,18 @@ export default function Navbar({accountAddress, balance}) {
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
-
-                  <a href="#" className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Dashboard</a>
-
-                  <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
-
-                  <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
-
-                  <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
+                  <Link href='/'>
+                    <a className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                  </Link>
+                  <Link href='/admin'>
+                    <a className="text-gray-300 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
+                  </Link>
+                  <Link href='/accounts'>
+                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
+                  </Link>
+                  <Link href='/transfer'>
+                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -47,21 +49,9 @@ export default function Navbar({accountAddress, balance}) {
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {balance}</a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
-                {accountAddress.slice(0,7)}...{accountAddress.slice(accountAddress.length-10)}
+                {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-10) : null}
               </div>
             </div>
-          </div>
-        </div>
-
-        <div className="sm:hidden" id="mobile-menu">
-          <div className="space-y-1 px-2 pt-2 pb-3">
-            <a href="#" className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" aria-current="page">Dashboard</a>
-
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Team</a>
-
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
-
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Calendar</a>
           </div>
         </div>
       </nav>

@@ -14,7 +14,6 @@ export default function Home() {
   const { account } = useAccount();
   const { transferRequest } = useTransferRequest();
   const { walletOwers } = getWalletOwers();
-
   const { requireInstall, isLoading, connect, contract, web3 } = useWeb3();
 
   return (
@@ -25,7 +24,7 @@ export default function Home() {
 
 
       {!isLoading ? (
-        account.data ? (<><Navbar accountAddress={account.data} balance={412} /> <Admin/> </>)
+        account.data ? (<> <Admin/> </>)
            : requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">
             <button onClick={() => {window.open('https://metamask.io/download/', '_blank')}} className="border border-white p-2 rounded-md">
