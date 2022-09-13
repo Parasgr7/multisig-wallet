@@ -224,7 +224,7 @@ contract MultiSigWallet {
 
     function cancelTransferRequest(uint id) public onlyOwners {
 
-         string memory ticker = transferRequests[id].ticker;
+        string memory ticker = transferRequests[id].ticker;
         bool hasBeenFound = false;
         uint transferIndex = 0;
         for (uint i = 0; i < transferRequests.length; i++) {
