@@ -1,5 +1,6 @@
 const ERCToken= artifacts.require('ERCToken')
 const MultiSigWallet = artifacts.require('MultiSigWallet')
+const MultiSigFactory = artifacts.require('MultiSigFactory')
 
 module.exports = async function(deployer, network, accounts) {
 
@@ -10,6 +11,8 @@ module.exports = async function(deployer, network, accounts) {
     }
     await deployer.deploy(MultiSigWallet)
     const multisig_wallet = await MultiSigWallet.deployed()
+
+    await deployer.deploy(MultiSigFactory)
 
     for (let key in token_info) {
       await deployer.deploy(ERCToken,key, token_info[key])

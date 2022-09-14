@@ -12,13 +12,14 @@ const setListeners = (provider) => {
 };
 
 export default function Web3Provider({ children }) {
-  const createWeb3State = ({ web3, provider, contract, isLoading }) => {
+  const createWeb3State = ({ web3, provider, factoryContract, walletContract, isLoading }) => {
     return {
       web3,
       provider,
-      contract,
+      factoryContract,
+      walletContract,
       isLoading,
-      hooks: setupHooks({ web3, provider, contract }),
+      hooks: setupHooks({ web3, provider, factoryContract, walletContract }),
     };
   };
 
@@ -26,7 +27,8 @@ export default function Web3Provider({ children }) {
     createWeb3State({
       web3: null,
       provider: null,
-      contract: null,
+      factoryContract: null,
+      walletContract: null,
       isLoading: true,
     })
   );
@@ -37,9 +39,10 @@ export default function Web3Provider({ children }) {
 
       if (provider) {
         const web3 = new Web3(provider);
-        const contract = await loadContract("MultiSigWallet", web3);
+        const walletContract = await loadContract("MultiSigWallet", web3);
+        const factoryContract = await loadContract("MultiSigFactory", web3);
         setWeb3Api(
-          createWeb3State({ web3, provider, contract, isLoading: false })
+          createWeb3State({ web3, provider, factoryContract, walletContract, isLoading: false })
         );
         setListeners(provider);
       } else {
@@ -52,7 +55,7 @@ export default function Web3Provider({ children }) {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3, provider, isLoading, contract } = web3Api;
+    const { web3, provider, isLoading, factoryContract, walletContract } = web3Api;
 
     return {
       ...web3Api,
@@ -78,7 +81,7 @@ export default function Web3Provider({ children }) {
 
   return (
     <Web3Context.Provider value={_web3Api}>
-      <Navbar accountAddress={_web3Api} balance={412} />
+      <Navbar web3API={_web3Api} />
       {children}
     </Web3Context.Provider>
   );

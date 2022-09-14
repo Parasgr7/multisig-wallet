@@ -2,8 +2,9 @@ import React from "react";
 import { Menu } from '@headlessui/react'
 import Link from 'next/link';
 
-export default function Navbar({accountAddress, balance}) {
-  const account_address = accountAddress.hooks.useAccount()
+export default function Navbar({web3API}) {
+
+  const account_address = web3API.hooks.useAccount()
   return (
     <>
       <nav className="bg-gray-800">
@@ -46,7 +47,7 @@ export default function Navbar({accountAddress, balance}) {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {balance}</a>
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {908}</a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
                 {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-10) : null}

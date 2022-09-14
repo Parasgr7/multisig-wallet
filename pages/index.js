@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Admin from "../components/ui/Admin"
+import Wallet from "../components/ui/Wallet"
 import {
   useAccount,
   useTransferRequest,
@@ -14,7 +14,7 @@ export default function Home() {
   const { account } = useAccount();
   const { transferRequest } = useTransferRequest();
   const { walletOwers } = getWalletOwers();
-  const { requireInstall, isLoading, connect, contract, web3 } = useWeb3();
+  const { requireInstall, isLoading, connect, factoryContract, walletContract, web3 } = useWeb3();
 
   return (
     <div>
@@ -24,7 +24,10 @@ export default function Home() {
 
 
       {!isLoading ? (
-        account.data ? (<> <Admin/> </>)
+        account.data ?
+        (<>
+          <Wallet/>
+        </>)
            : requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">
             <button onClick={() => {window.open('https://metamask.io/download/', '_blank')}} className="border border-white p-2 rounded-md">
