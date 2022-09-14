@@ -1,10 +1,11 @@
 import React from "react";
 import { Menu } from '@headlessui/react'
-import Link from 'next/link';
+import Link from 'next/link'
 
 export default function Navbar({web3API}) {
 
   const account_address = web3API.hooks.useAccount()
+  const selectedWallet = web3API.selectedWallet
   return (
     <>
       <nav className="bg-gray-800">
@@ -32,7 +33,7 @@ export default function Navbar({web3API}) {
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
                   <Link href='/'>
-                    <a className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    <a className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Wallet</a>
                   </Link>
                   <Link href='/admin'>
                     <a className="text-gray-300 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
@@ -47,6 +48,9 @@ export default function Navbar({web3API}) {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                Wallet ID:  {selectedWallet ? selectedWallet.slice(0,7) + "..." + selectedWallet.slice(selectedWallet.length-10) : "N/A"}
+              </a>
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {908}</a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">

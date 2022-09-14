@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Wallet from "../components/ui/Wallet"
+import { useEffect, useState } from "react"
+
 import {
   useAccount,
   useTransferRequest,
-  getWalletOwers
+  useWalletList
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
 import Navbar from "../components/ui/Navbar"
@@ -13,7 +15,8 @@ import Navbar from "../components/ui/Navbar"
 export default function Home() {
   const { account } = useAccount();
   const { transferRequest } = useTransferRequest();
-  const { walletOwers } = getWalletOwers();
+  const { walletList } = useWalletList();
+
   const { requireInstall, isLoading, connect, factoryContract, walletContract, web3 } = useWeb3();
 
   return (
@@ -22,11 +25,10 @@ export default function Home() {
         <title>MultiSigWallet DApp</title>
       </Head>
 
-
       {!isLoading ? (
         account.data ?
         (<>
-          <Wallet/>
+          <Wallet walletList ={walletList.data} />
         </>)
            : requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">

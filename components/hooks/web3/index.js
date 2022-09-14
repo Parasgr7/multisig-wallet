@@ -19,10 +19,10 @@ export const useTransferRequest = () => {
   };
 };
 
-export const getWalletOwers = () => {
-  const data = useHooks((hooks) => hooks.useTransferRequest)();
+export const useWalletList = () => {
+  const walletList = useHooks((hooks) => hooks.useWalletList)();
 
   return {
-    wallet_owners: data,
+    walletList,
   };
 };

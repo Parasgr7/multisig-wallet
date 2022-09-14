@@ -12,13 +12,14 @@ const setListeners = (provider) => {
 };
 
 export default function Web3Provider({ children }) {
-  const createWeb3State = ({ web3, provider, factoryContract, walletContract, isLoading }) => {
+  const createWeb3State = ({ web3, provider, factoryContract, walletContract, isLoading, selectedWallet }) => {
     return {
       web3,
       provider,
       factoryContract,
       walletContract,
       isLoading,
+      selectedWallet,
       hooks: setupHooks({ web3, provider, factoryContract, walletContract }),
     };
   };

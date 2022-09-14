@@ -9,10 +9,13 @@ module.exports = async function(deployer, network, accounts) {
       "LAR Token" : "LAR",
       "DAI token" : "DAI"
     }
+
     await deployer.deploy(MultiSigWallet)
     const multisig_wallet = await MultiSigWallet.deployed()
 
     await deployer.deploy(MultiSigFactory)
+    const multisig_factory = await MultiSigFactory.deployed()
+    await multisig_factory.addNewWalletInstance(accounts[0],multisig_wallet.address)
 
     for (let key in token_info) {
       await deployer.deploy(ERCToken,key, token_info[key])
