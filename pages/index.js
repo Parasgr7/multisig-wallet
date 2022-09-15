@@ -28,7 +28,7 @@ export default function Home() {
       {!isLoading ? (
         account.data ?
         (<>
-          <Wallet walletList ={walletList.data} />
+          <Wallet walletList = {walletList.data} accountAddr = {account.data} />
         </>)
            : requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">

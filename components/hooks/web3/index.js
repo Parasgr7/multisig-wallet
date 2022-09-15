@@ -15,7 +15,7 @@ export const useTransferRequest = () => {
   const data = useHooks((hooks) => hooks.useTransferRequest)();
 
   return {
-    trasnfer_requests: data,
+    trasnfer_requests: data
   };
 };
 
@@ -23,6 +23,14 @@ export const useWalletList = () => {
   const walletList = useHooks((hooks) => hooks.useWalletList)();
 
   return {
-    walletList,
+    walletList
+  };
+};
+
+export const useOwnerList = () => {
+  const ownerList = useHooks((hooks) => hooks.useOwnerList)();
+
+  return {
+    ownerList
   };
 };

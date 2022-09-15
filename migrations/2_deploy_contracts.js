@@ -10,11 +10,13 @@ module.exports = async function(deployer, network, accounts) {
       "DAI token" : "DAI"
     }
 
-    await deployer.deploy(MultiSigWallet)
-    const multisig_wallet = await MultiSigWallet.deployed()
-
     await deployer.deploy(MultiSigFactory)
     const multisig_factory = await MultiSigFactory.deployed()
+
+    await deployer.deploy(MultiSigWallet, multisig_factory.address)
+    const multisig_wallet = await MultiSigWallet.deployed()
+
+
     await multisig_factory.addNewWalletInstance(accounts[0],multisig_wallet.address)
 
     for (let key in token_info) {

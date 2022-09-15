@@ -3,23 +3,21 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./MultiSigFactory.sol";
 
 contract MultiSigWallet {
 
-    address mainOwner;
-    address[] walletOwners;
-    uint limit;
+    address admin;
+    address factoryContractAddress;
     uint depositId;
     uint withdrawalId;
     uint transferId;
     string[] tokenList;
-    address multisigIntance;
 
-    constructor() {
-        mainOwner = msg.sender;
-        walletOwners.push(mainOwner);
-        limit = walletOwners.length - 1;
+    constructor(address _factoryContractAddress) {
+        admin = msg.sender;
         tokenList.push("ETH");
+        factoryContractAddress = _factoryContractAddress;
     }
 
     mapping(address => mapping(string => uint)) balance;
@@ -55,12 +53,19 @@ contract MultiSigWallet {
     event fundsTransfered(string ticker, address sender, address receiver, uint amount, uint id, uint approvals, uint timeOfTransaction);
     event tokenAdded(address addedBy, string ticker, address tokenAddress, uint timeOfTransaction);
 
-    modifier onlyOwners() {
+    modifier onlyAdmin() {
+      require(msg.sender == admin, "Only Contract Owner allowed");
+      _;
+
+    }
+
+    modifier onlyOwners(address walletAddress) {
+       MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
        bool isOwner = false;
-       for (uint i = 0; i< walletOwners.length; i++) {
+       for (uint i = 0; i< factory.getWalletOwners(walletAddress).length; i++) {
 
-           if (walletOwners[i] == msg.sender) {
+           if (factory.getWalletOwners(walletAddress)[i].owners == msg.sender) {
 
                isOwner = true;
                break;
@@ -81,7 +86,7 @@ contract MultiSigWallet {
         _;
     }
 
-    function addToken(string memory ticker, address _tokenAddress) public onlyOwners {
+    function addToken(string memory ticker, address _tokenAddress) public onlyAdmin {
 
         for (uint i = 0; i < tokenList.length; i++) {
 
@@ -97,71 +102,35 @@ contract MultiSigWallet {
         emit tokenAdded(msg.sender, ticker, _tokenAddress, block.timestamp);
     }
 
-    function setMultisigContractAdress(address walletAddress) private {
+    function addWalletOwner(address owner, address walletAddress) public onlyOwners(walletAddress) {
 
-        multisigIntance = walletAddress;
-    }
+       MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
-    function callAddOwner(address owner, address walletAddress) private {
+       for (uint i = 0; i < factory.getWalletOwners(walletAddress).length; i++) {
 
-        MultiSigFactory factory = MultiSigFactory(multisigIntance);
-        factory.addNewWalletInstance(owner, walletAddress);
-    }
-
-    function callRemoveOwner(address owner, address walletAddress) private {
-
-        MultiSigFactory factory = MultiSigFactory(multisigIntance);
-        factory.removeNewWalletInstance(owner, walletAddress);
-    }
-
-    function addWalletOwner(address owner, address walletAddress, address _address) public onlyOwners {
-
-
-       for (uint i = 0; i < walletOwners.length; i++) {
-
-           if(walletOwners[i] == owner) {
+           if(factory.getWalletOwners(walletAddress)[i].owners == owner) {
 
                revert("cannot add duplicate owners");
            }
        }
 
-        walletOwners.push(owner);
-        limit = walletOwners.length - 1;
-
-        emit walletOwnerAdded(msg.sender, owner, block.timestamp);
-
-        setMultisigContractAdress(_address);
-        callAddOwner(owner, walletAddress);
-    }
-
-    function removeWalletOwner(address owner, address walletAddress, address _address) public onlyOwners {
-
-        bool hasBeenFound = false;
-        uint ownerIndex;
-        for (uint i = 0; i < walletOwners.length; i++) {
-
-            if(walletOwners[i] == owner) {
-
-                hasBeenFound = true;
-                ownerIndex = i;
-                break;
-            }
-        }
-
-        require(hasBeenFound == true, "wallet owner not detected");
-
-        walletOwners[ownerIndex] = walletOwners[walletOwners.length - 1];
-        walletOwners.pop();
-        limit = walletOwners.length - 1;
-
-         emit walletOwnerRemoved(msg.sender, owner, block.timestamp);
-
-         setMultisigContractAdress(_address);
-         callRemoveOwner(owner, walletAddress);
+       factory.addNewWalletInstance(owner, walletAddress);
+       emit walletOwnerAdded(msg.sender, owner, block.timestamp);
 
     }
 
-    function deposit(string memory ticker, uint amount) public payable onlyOwners tokenExists(ticker) {
+    function removeWalletOwner(address owner, address walletAddress) public onlyOwners(walletAddress) {
+
+        MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
+
+        factory.removeNewWalletInstance(owner, walletAddress);
+        emit walletOwnerRemoved(msg.sender, owner, block.timestamp);
+
+
+
+    }
+
+    function deposit(string memory ticker, uint amount, address walletAddress) public payable onlyOwners(walletAddress) tokenExists(ticker) {
 
         require(balance[msg.sender][ticker] >= 0, "cannot deposiit a calue of 0");
 
@@ -184,7 +153,7 @@ contract MultiSigWallet {
 
     }
 
-    function withdraw(string memory ticker, uint amount) public onlyOwners tokenExists(ticker) {
+    function withdraw(string memory ticker, uint amount, address walletAddress) public onlyOwners(walletAddress) tokenExists(ticker) {
 
         require(balance[msg.sender][ticker] >= amount);
 
@@ -207,13 +176,15 @@ contract MultiSigWallet {
 
     }
 
-    function createTrnasferRequest(string memory ticker, address payable receiver, uint amount) public onlyOwners tokenExists(ticker) {
+    function createTrnasferRequest(string memory ticker, address payable receiver, uint amount, address walletAddress) public onlyOwners(walletAddress) tokenExists(ticker) {
+
+        MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
         require(balance[msg.sender][ticker] >= amount, "insufficent funds to create a transfer");
 
-        for (uint i = 0; i < walletOwners.length; i++) {
+        for (uint i = 0; i < factory.getWalletOwners(walletAddress).length; i++) {
 
-            require(walletOwners[i] != receiver, "cannot transfer funds withiwn the wallet");
+            require(factory.getWalletOwners(walletAddress)[i].owners != receiver, "cannot transfer funds withiwn the wallet");
         }
 
         balance[msg.sender][ticker] -= amount;
@@ -222,7 +193,7 @@ contract MultiSigWallet {
         emit transferCreated(ticker, msg.sender, receiver, amount, transferId, 0, block.timestamp);
     }
 
-    function cancelTransferRequest(uint id) public onlyOwners {
+    function cancelTransferRequest(uint id, address walletAddress) public onlyOwners(walletAddress) {
 
         string memory ticker = transferRequests[id].ticker;
         bool hasBeenFound = false;
@@ -250,7 +221,7 @@ contract MultiSigWallet {
         transferRequests.pop();
     }
 
-    function approveTransferRequest(uint id) public onlyOwners {
+    function approveTransferRequest(uint id, address walletAddress) public onlyOwners(walletAddress) {
 
         string memory ticker = transferRequests[id].ticker;
         bool hasBeenFound = false;
@@ -274,8 +245,16 @@ contract MultiSigWallet {
         approvals[msg.sender][id] = true;
         transferRequests[transferIndex].approvals++;
 
-        emit transferApproved(ticker, msg.sender, transferRequests[transferIndex].receiver, transferRequests[transferIndex].amount, transferRequests[transferIndex].id, transferRequests[transferIndex].approvals, transferRequests[transferIndex].timeOfTransaction);
+        emit transferApproved(
+            ticker,
+            msg.sender,
+            transferRequests[transferIndex].receiver,
+            transferRequests[transferIndex].amount,
+            transferRequests[transferIndex].id,
+            transferRequests[transferIndex].approvals,
+            transferRequests[transferIndex].timeOfTransaction);
 
+        uint limit = getApprovalLimit(walletAddress);
         if (transferRequests[transferIndex].approvals == limit) {
 
             transferFunds(ticker, transferIndex);
@@ -317,9 +296,10 @@ contract MultiSigWallet {
         return balance[msg.sender][ticker];
     }
 
-    function getApprovalLimit() public view returns (uint) {
+    function getApprovalLimit(address walletAddress) public view returns (uint) {
+        MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
-        return limit;
+        return factory.getWalletOwners(walletAddress).length - 1;
     }
 
     function getContractETHBalance() public view returns(uint) {
@@ -332,82 +312,9 @@ contract MultiSigWallet {
         return balance[address(this)][ticker];
     }
 
-    function getWalletOwers() public view returns(address[] memory) {
-
-        return walletOwners;
-    }
-
     function getTokenList() public view returns(string[] memory) {
 
         return tokenList;
-    }
-
-}
-
-
-
-
-contract MultiSigFactory {
-
-    struct UserWallets{
-
-        address walletAddress;
-    }
-
-    UserWallets[] userWallets;
-    MultiSigWallet[] multisigWalletIntances;
-
-    mapping(address => UserWallets[]) ownersWallets;
-
-    event WalletCreated(address createdBy, address newWalletContractAddress, uint timeOfTransaction);
-
-    function createNewWallet() public {
-
-        MultiSigWallet newMultisigWalletContract = new MultiSigWallet();
-        multisigWalletIntances.push(newMultisigWalletContract);
-
-        UserWallets[] storage newWallet = ownersWallets[msg.sender];
-        newWallet.push(UserWallets(address(newMultisigWalletContract)));
-
-        emit WalletCreated(msg.sender, address(newMultisigWalletContract), block.timestamp);
-
-    }
-
-    function addNewWalletInstance(address owner, address walletAddress) external {
-
-        UserWallets[] storage newWallet = ownersWallets[owner];
-        newWallet.push(UserWallets(walletAddress));
-
-    }
-
-    function removeNewWalletInstance(address _owner, address _walletAddress) external {
-
-        UserWallets[] storage newWallet = ownersWallets[_owner];
-
-        bool hasBeenFound = false;
-        uint walletIndex;
-        for (uint i = 0; i < newWallet.length; i++) {
-
-            if(newWallet[i].walletAddress == _walletAddress) {
-
-                hasBeenFound = true;
-                walletIndex = i;
-                break;
-            }
-
-        }
-
-        require(hasBeenFound, "the owners does not own the wallet specified");
-
-        newWallet[walletIndex] = newWallet[newWallet.length - 1];
-        newWallet.pop();
-
-
-    }
-
-    function getOwnerWallets(address owner) public view returns(UserWallets[] memory) {
-
-        return ownersWallets[owner];
     }
 
 }

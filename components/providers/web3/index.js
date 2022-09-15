@@ -20,7 +20,7 @@ export default function Web3Provider({ children }) {
       walletContract,
       isLoading,
       selectedWallet,
-      hooks: setupHooks({ web3, provider, factoryContract, walletContract }),
+      hooks: setupHooks({ web3, provider, factoryContract, walletContract, selectedWallet }),
     };
   };
 

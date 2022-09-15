@@ -33,4 +33,20 @@ module.exports = {
   },
   contracts_directory: './contracts/',
   contracts_build_directory: './abis/',
+  compilers: {
+    solc: {
+      version: "^0.8.10",
+      settings: {
+        evmVersion: 'byzantium',
+        optimizer: {
+          enabled: true,
+          runs: 1
+        }
+      },
+      mocha: {
+        reporter: 'eth-gas-reporter',
+      }
+    }
+  },
+  plugins: ["truffle-contract-size"]
 }
