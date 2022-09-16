@@ -16,10 +16,9 @@ export default function Accounts() {
   const { account } = useAccount();
   const { trasnfer_requests } = useTransferRequest();
 
-
-  let amountToSend;
   const deposit = async() => {
-    console.log(selectedToken)
+    let amountToSend;
+
     if(selectedToken == "ETH")
     {
       amountToSend = web3.utils.toWei(depositAmount, "ether");
@@ -28,7 +27,7 @@ export default function Accounts() {
     try {
       await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
       const balance = await state.walletContract.methods.getBalance(selectedToken).call();
-      setBalance(balance);
+      setBalance(state.web3.utils.fromWei(balance, "ether"));
       setDepositAmount('');
     } catch(err){
       console.log(err)
@@ -36,11 +35,15 @@ export default function Accounts() {
 
   }
   const withdraw = async() => {
-
+    let amountToWithdraw;
+    if(selectedToken == "ETH")
+    {
+      amountToWithdraw = web3.utils.toWei(withdrawAmount, "ether");
+    }
     try {
-      await state.walletContract.methods.withdraw( selectedToken , withdrawAmount , state.selectedWallet).send({ from: account.data });
+      await state.walletContract.methods.withdraw( selectedToken , amountToWithdraw , state.selectedWallet).send({ from: account.data });
       const balance = await state.walletContract.methods.getBalance(selectedToken).call();
-      setBalance(balance);
+      setBalance(state.web3.utils.fromWei(balance, "ether"));
       setWithdrawAmount('');
     } catch(err){
       console.log(err)

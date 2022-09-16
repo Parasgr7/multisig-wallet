@@ -11,7 +11,7 @@ export default function Navbar() {
       if (state.walletContract)
       {
         const response = await state.walletContract.methods.getBalance(selectedToken).call();
-        setBalance(response);
+        setBalance(state.web3.utils.fromWei(response, "ether"));
       }
     }
     fetchBalance();
