@@ -174,7 +174,7 @@ contract MultiSigWallet {
 
     }
 
-    function createTrnasferRequest(string memory ticker, address payable receiver, uint amount, address walletAddress) public onlyOwners(walletAddress) tokenExists(ticker) {
+    function createTransferRequest(string memory ticker, address payable receiver, uint amount, address walletAddress) public onlyOwners(walletAddress) tokenExists(ticker) {
 
         MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 

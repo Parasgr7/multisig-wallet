@@ -29,8 +29,16 @@ export const useWalletList = () => {
 
 export const useOwnerList = () => {
   const ownerList = useHooks((hooks) => hooks.useOwnerList)();
-  console.log("ownerList", ownerList)
+
   return {
     ownerList
+  };
+};
+
+export const useBalance = () => {
+  const balance = useHooks((hooks) => hooks.useBalance)();
+
+  return {
+    balance
   };
 };

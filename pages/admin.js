@@ -8,9 +8,8 @@ import Link from 'next/link';
 
 export default function Admin() {
   const { ownerList } = useOwnerList();
-  console.log(ownerList)
-  const {state} = useWeb3();
   const { account } = useAccount();
+  const {state} = useWeb3();
   const [address, setAddress] = useState(null);
 
 

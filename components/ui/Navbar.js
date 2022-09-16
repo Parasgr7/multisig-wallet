@@ -3,14 +3,19 @@ import { Menu } from '@headlessui/react'
 import { useWeb3 } from "../../components/providers/web3";
 import Link from 'next/link'
 
-export default function Navbar({}) {
-  const {state, selectedToken, setSelectedToken} = useWeb3();
+export default function Navbar() {
+  const {state, selectedToken, setSelectedToken, balance, setBalance} = useWeb3();
   const account_address = state.hooks.useAccount();
-
   useEffect(() => {
-   setSelectedToken(null);
-   console.log(selectedToken)
- }, [setSelectedToken])
+    const fetchBalance = async() => {
+      if (state.walletContract)
+      {
+        const response = await state.walletContract.methods.getBalance(selectedToken).call();
+        setBalance(response);
+      }
+    }
+    fetchBalance();
+  }, [selectedToken]);
 
   return (
     <>
@@ -53,7 +58,7 @@ export default function Navbar({}) {
                   <label class="dropdown">
 
                     <div class="dd-button">
-                      {!selectedToken ? "ETH" : selectedToken}
+                      {selectedToken}
                     </div>
                     <input type="checkbox" class="dd-input" id="test"/>
 
@@ -74,7 +79,7 @@ export default function Navbar({}) {
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                 Wallet ID:  {state.selectedWallet ? state.selectedWallet.slice(0,7) + "..." + state.selectedWallet.slice(state.selectedWallet.length-10) : "N/A"}
               </a>
-              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {908}</a>
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance:  {balance}</a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
                 {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-10) : null}

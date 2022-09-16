@@ -1,4 +1,52 @@
+import { useEffect, useState } from "react";
+import { useWeb3 } from "../components/providers/web3";
+import {
+  useOwnerList,
+  useAccount,
+  useTransferRequest,
+  useBalance
+} from "../components/hooks/web3";
+const Web3 = require('web3');
+const web3 = new Web3();
+
 export default function Accounts() {
+  const [depositAmount, setDepositAmount] = useState(null);
+  const [withdrawAmount, setWithdrawAmount] = useState(null);
+  const { state, selectedToken, setBalance } = useWeb3();
+  const { account } = useAccount();
+  const { trasnfer_requests } = useTransferRequest();
+
+
+  let amountToSend;
+  const deposit = async() => {
+    console.log(selectedToken)
+    if(selectedToken == "ETH")
+    {
+      amountToSend = web3.utils.toWei(depositAmount, "ether");
+    }
+
+    try {
+      await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
+      const balance = await state.walletContract.methods.getBalance(selectedToken).call();
+      setBalance(balance);
+      setDepositAmount('');
+    } catch(err){
+      console.log(err)
+    }
+
+  }
+  const withdraw = async() => {
+
+    try {
+      await state.walletContract.methods.withdraw( selectedToken , withdrawAmount , state.selectedWallet).send({ from: account.data });
+      const balance = await state.walletContract.methods.getBalance(selectedToken).call();
+      setBalance(balance);
+      setWithdrawAmount('');
+    } catch(err){
+      console.log(err)
+    }
+
+  }
   return (
     <>
       <h1>Accounts Post</h1>
@@ -10,9 +58,18 @@ export default function Accounts() {
             </div>
             <div className="p-6">
               <p className="text-gray-700 text-base mb-4">
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="deposit_amount" type="number" placeholder="Amount"/>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="deposit_amount"
+                    type="number"
+                    placeholder="Amount"
+                    value={depositAmount}
+                    onChange={e => { setDepositAmount(e.currentTarget.value) }}/>
               </p>
-              <button type="button" className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+              <button
+                  type="button"
+                  className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  onClick={() => deposit()}>
                 Deposit Amount
               </button>
             </div>
@@ -25,9 +82,19 @@ export default function Accounts() {
             </div>
             <div className="p-6">
               <p className="text-gray-700 text-base mb-4">
-                <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="deposit_amount" type="number" placeholder="Amount"/>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="deposit_amount"
+                    type="number"
+                    placeholder="Amount"
+                    value={withdrawAmount}
+                    onChange={e => { setWithdrawAmount(e.currentTarget.value) }}
+                    />
               </p>
-              <button type="button" className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+              <button
+                  type="button"
+                  className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  onClick={() => withdraw()}>
                 Withdraw Amount
               </button>
             </div>

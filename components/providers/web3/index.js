@@ -33,10 +33,12 @@ export default function Web3Provider({ children }) {
       walletContract: null,
       isLoading: true,
       tokenList: null,
+
     })
   );
 
   const [selectedToken, setSelectedToken] = useState("ETH");
+  const [balance, setBalance] = useState(null);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -47,6 +49,8 @@ export default function Web3Provider({ children }) {
         const walletContract = await loadContract("MultiSigWallet", web3);
         const factoryContract = await loadContract("MultiSigFactory", web3);
         const tokenList = await walletContract.methods.getTokenList().call();
+        const initialBalance = await walletContract.methods.getBalance("ETH").call();
+        setBalance(initialBalance);
         setWeb3Api(
           createWeb3State({ web3, provider, factoryContract, walletContract, isLoading: false, tokenList })
         );
@@ -86,7 +90,7 @@ export default function Web3Provider({ children }) {
   // Return another instance of _web3Api if web3Api changes
 
   return (
-    <Web3Context.Provider value={{state:_web3Api, selectedToken, setSelectedToken}}>
+    <Web3Context.Provider value={{state:_web3Api, selectedToken, setSelectedToken, balance, setBalance}}>
       <Navbar />
       {children}
     </Web3Context.Provider>
