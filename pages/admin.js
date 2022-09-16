@@ -8,7 +8,8 @@ import Link from 'next/link';
 
 export default function Admin() {
   const { ownerList } = useOwnerList();
-  const contextApi = useWeb3();
+  console.log(ownerList)
+  const {state} = useWeb3();
   const { account } = useAccount();
   const [address, setAddress] = useState(null);
 
@@ -16,7 +17,7 @@ export default function Admin() {
   const removeSelectedOwner = async(accountAddress) => {
 
     try {
-      await contextApi.walletContract.methods.removeWalletOwner(accountAddress, contextApi.selectedWallet).send({ from: account.data })
+      await state.walletContract.methods.removeWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
     } catch(err){
       console.log(err)
     }
@@ -25,7 +26,7 @@ export default function Admin() {
   const addOwnerAddress = async(accountAddress) => {
 
     try {
-      await contextApi.walletContract.methods.addWalletOwner(accountAddress, contextApi.selectedWallet).send({ from: account.data })
+      await state.walletContract.methods.addWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
       setAddress('');
     } catch(err){
       console.log(err)
@@ -87,11 +88,11 @@ export default function Admin() {
                           {element.owners}
                           </td>
                           <td className="py-4 px-6">
-                            <button
+                            {element.owners != account.data ? (<button
                               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                               onClick={() => removeSelectedOwner(element.owners)}>
                               Remove Owner
-                            </button>
+                            </button>): null}
                           </td>
                       </tr>
                     </>

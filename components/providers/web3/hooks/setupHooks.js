@@ -9,7 +9,7 @@ export const setupHooks = ({web3, provider, factoryContract, walletContract, sel
         useAccount: createAccountHook(web3, provider),
         useTransferRequest: createTransferRequestHook(web3, walletContract),
         useWalletList: createWalletList(web3, factoryContract),
-        useOwnerList: createOwnerList(web3, factoryContract, selectedWallet)
+        useOwnerList: createOwnerList(web3, factoryContract, selectedWallet),
 
     }
 }

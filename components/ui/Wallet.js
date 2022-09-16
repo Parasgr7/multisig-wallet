@@ -3,15 +3,15 @@ import { useWeb3 } from "../../components/providers/web3";
 import Link from 'next/link';
 
 export default function Wallet({ walletList, accountAddr}) {
-  const contextApi = useWeb3();
+  const {state} = useWeb3();
 
   const setSelectedWalletAddr = (walletAddress) => {
-    contextApi.selectedWallet = walletAddress;
+    state.selectedWallet = walletAddress;
   }
 
   const createNewWallet = async() => {
     try {
-      await contextApi.factoryContract.methods.createNewWallet().send({ from: accountAddr })
+      await state.factoryContract.methods.createNewWallet().send({ from: accountAddr })
     } catch(err){
       console.log(err)
     }

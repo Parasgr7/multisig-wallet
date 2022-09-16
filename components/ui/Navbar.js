@@ -1,11 +1,17 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Menu } from '@headlessui/react'
+import { useWeb3 } from "../../components/providers/web3";
 import Link from 'next/link'
 
-export default function Navbar({web3API}) {
+export default function Navbar({}) {
+  const {state, selectedToken, setSelectedToken} = useWeb3();
+  const account_address = state.hooks.useAccount();
 
-  const account_address = web3API.hooks.useAccount()
-  const selectedWallet = web3API.selectedWallet
+  useEffect(() => {
+   setSelectedToken(null);
+   console.log(selectedToken)
+ }, [setSelectedToken])
+
   return (
     <>
       <nav className="bg-gray-800">
@@ -44,12 +50,29 @@ export default function Navbar({web3API}) {
                   <Link href='/transfer'>
                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
                   </Link>
+                  <label class="dropdown">
+
+                    <div class="dd-button">
+                      {!selectedToken ? "ETH" : selectedToken}
+                    </div>
+                    <input type="checkbox" class="dd-input" id="test"/>
+
+                    <ul class="dd-menu">
+                      {state.tokenList? state.tokenList.map((element, index) => {
+                        return (
+                        <li id={index} onClick={() => setSelectedToken(element)}>{element}</li>
+                        )
+                      }): null }
+
+                    </ul>
+
+                  </label>
                 </div>
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                Wallet ID:  {selectedWallet ? selectedWallet.slice(0,7) + "..." + selectedWallet.slice(selectedWallet.length-10) : "N/A"}
+                Wallet ID:  {state.selectedWallet ? state.selectedWallet.slice(0,7) + "..." + state.selectedWallet.slice(state.selectedWallet.length-10) : "N/A"}
               </a>
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance: {908}</a>
 

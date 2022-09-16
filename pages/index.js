@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import {
   useAccount,
   useTransferRequest,
-  useWalletList
+  useWalletList,
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
 import Navbar from "../components/ui/Navbar"

@@ -126,8 +126,6 @@ contract MultiSigWallet {
         factory.removeNewWalletInstance(owner, walletAddress);
         emit walletOwnerRemoved(msg.sender, owner, block.timestamp);
 
-
-
     }
 
     function deposit(string memory ticker, uint amount, address walletAddress) public payable onlyOwners(walletAddress) tokenExists(ticker) {
