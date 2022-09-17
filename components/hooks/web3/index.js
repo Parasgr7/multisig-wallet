@@ -34,11 +34,3 @@ export const useOwnerList = () => {
     ownerList
   };
 };
-
-export const useBalance = () => {
-  const balance = useHooks((hooks) => hooks.useBalance)();
-
-  return {
-    balance
-  };
-};

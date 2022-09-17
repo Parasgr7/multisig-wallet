@@ -8,14 +8,14 @@ export default function Navbar() {
   const account_address = state.hooks.useAccount();
   useEffect(() => {
     const fetchBalance = async() => {
-      if (state.walletContract)
+      if (state.walletContract && state.selectedWallet)
       {
-        const response = await state.walletContract.methods.getBalance(selectedToken).call();
+        const response = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
         setBalance(state.web3.utils.fromWei(response, "ether"));
       }
     }
     fetchBalance();
-  }, [selectedToken]);
+  }, [selectedToken, state.selectedWallet]);
 
   return (
     <>
@@ -79,7 +79,7 @@ export default function Navbar() {
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                 Wallet ID:  {state.selectedWallet ? state.selectedWallet.slice(0,7) + "..." + state.selectedWallet.slice(state.selectedWallet.length-10) : "N/A"}
               </a>
-              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance:  {balance}</a>
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance:  {balance? balance : "N/A"}</a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
                 {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-10) : null}

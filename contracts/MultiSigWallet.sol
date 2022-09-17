@@ -20,7 +20,7 @@ contract MultiSigWallet {
         factoryContractAddress = _factoryContractAddress;
     }
 
-    mapping(address => mapping(string => uint)) balance;
+    mapping(address => mapping(address => mapping(string => uint))) balance;
     mapping(address => mapping(uint => bool)) approvals;
     mapping(string => Token) tokenMapping;
 
@@ -130,17 +130,17 @@ contract MultiSigWallet {
 
     function deposit(string memory ticker, uint amount, address walletAddress) public payable onlyOwners(walletAddress) tokenExists(ticker) {
 
-        require(balance[msg.sender][ticker] >= 0, "cannot deposiit a calue of 0");
+        require(balance[walletAddress][msg.sender][ticker] >= 0, "cannot deposiit a calue of 0");
 
         if(keccak256(bytes(ticker)) == keccak256(bytes("ETH"))) {
 
-            balance[msg.sender]["ETH"] += msg.value;
+            balance[walletAddress][msg.sender]["ETH"] += msg.value;
 
         }
 
         else {
 
-            balance[msg.sender][ticker] += amount;
+            balance[walletAddress][msg.sender][ticker] += amount;
             IERC20(tokenMapping[ticker].tokenAddress).transferFrom(msg.sender, address(this), amount);
 
         }
@@ -153,9 +153,9 @@ contract MultiSigWallet {
 
     function withdraw(string memory ticker, uint amount, address walletAddress) public onlyOwners(walletAddress) tokenExists(ticker) {
 
-        require(balance[msg.sender][ticker] >= amount);
+        require(balance[walletAddress][msg.sender][ticker] >= amount);
 
-        balance[msg.sender][ticker] -= amount;
+        balance[walletAddress][msg.sender][ticker] -= amount;
 
         if(keccak256(bytes(ticker)) == keccak256(bytes("ETH"))) {
 
@@ -178,14 +178,14 @@ contract MultiSigWallet {
 
         MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
-        require(balance[msg.sender][ticker] >= amount, "insufficent funds to create a transfer");
+        require(balance[walletAddress][msg.sender][ticker] >= amount, "insufficent funds to create a transfer");
 
         for (uint i = 0; i < factory.getWalletOwners(walletAddress).length; i++) {
 
             require(factory.getWalletOwners(walletAddress)[i].owners != receiver, "cannot transfer funds withiwn the wallet");
         }
 
-        balance[msg.sender][ticker] -= amount;
+        balance[walletAddress][msg.sender][ticker] -= amount;
         transferRequests.push(Transfer(ticker, msg.sender, receiver, amount, transferId, 0, block.timestamp));
         transferId++;
         emit transferCreated(ticker, msg.sender, receiver, amount, transferId, 0, block.timestamp);
@@ -211,7 +211,7 @@ contract MultiSigWallet {
         require(transferRequests[transferIndex].sender == msg.sender, "only the transfer creator can cancel");
         require(hasBeenFound, "transfer request does not exist");
 
-        balance[msg.sender][ticker] += transferRequests[transferIndex].amount;
+        balance[walletAddress][msg.sender][ticker] += transferRequests[transferIndex].amount;
 
         transferRequests[transferIndex] = transferRequests[transferRequests.length - 1];
 
@@ -255,13 +255,13 @@ contract MultiSigWallet {
         uint limit = getApprovalLimit(walletAddress);
         if (transferRequests[transferIndex].approvals == limit) {
 
-            transferFunds(ticker, transferIndex);
+            transferFunds(ticker, transferIndex, walletAddress);
         }
     }
 
-    function transferFunds(string memory ticker, uint id) private {
+    function transferFunds(string memory ticker, uint id, address walletAddress) private {
 
-        balance[transferRequests[id].receiver][ticker] += transferRequests[id].amount;
+        balance[walletAddress][transferRequests[id].receiver][ticker] += transferRequests[id].amount;
 
         if(keccak256(bytes(ticker)) == keccak256(bytes("ETH"))) {
 
@@ -289,9 +289,9 @@ contract MultiSigWallet {
         return transferRequests;
     }
 
-    function getBalance(string memory ticker) public view tokenExists(ticker) returns(uint) {
+    function getBalance(string memory ticker, address walletAddress) public view tokenExists(ticker) returns(uint) {
 
-        return balance[msg.sender][ticker];
+        return balance[walletAddress][msg.sender][ticker];
     }
 
     function getApprovalLimit(address walletAddress) public view returns (uint) {
@@ -305,9 +305,9 @@ contract MultiSigWallet {
         return address(this).balance;
     }
 
-    function getContractERC20Balance(string memory ticker) public view tokenExists(ticker) returns(uint) {
+    function getContractERC20Balance(string memory ticker, address walletAddress) public view tokenExists(ticker) returns(uint) {
 
-        return balance[address(this)][ticker];
+        return balance[walletAddress][address(this)][ticker];
     }
 
     function getTokenList() public view returns(string[] memory) {

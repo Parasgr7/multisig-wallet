@@ -17,7 +17,7 @@ export default function Home() {
   const { transferRequest } = useTransferRequest();
   const { walletList } = useWalletList();
 
-  const { requireInstall, isLoading, connect, factoryContract, walletContract, web3 } = useWeb3();
+  const { state } = useWeb3();
 
   return (
     <div>
@@ -25,12 +25,12 @@ export default function Home() {
         <title>MultiSigWallet DApp</title>
       </Head>
 
-      {!isLoading ? (
+      {!state.isLoading ? (
         account.data ?
         (<>
           <Wallet walletList = {walletList.data} accountAddr = {account.data} />
         </>)
-           : requireInstall ? (
+           : state.requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">
             <button onClick={() => {window.open('https://metamask.io/download/', '_blank')}} className="border border-white p-2 rounded-md">
               Install metamask
@@ -39,7 +39,7 @@ export default function Home() {
         ) : (
           <div className="w-full grid h-screen place-items-center bg-black text-white">
             <button
-              onClick={() => connect()}
+              onClick={() => state.connect()}
               className="border border-white p-2 rounded-md"
             >
               Connect to metamask with your browser

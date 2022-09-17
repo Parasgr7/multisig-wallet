@@ -49,8 +49,7 @@ export default function Web3Provider({ children }) {
         const walletContract = await loadContract("MultiSigWallet", web3);
         const factoryContract = await loadContract("MultiSigFactory", web3);
         const tokenList = await walletContract.methods.getTokenList().call();
-        const initialBalance = await walletContract.methods.getBalance("ETH").call();
-        setBalance(web3.utils.fromWei(initialBalance, "ether"));
+        setBalance(null);
         setWeb3Api(
           createWeb3State({ web3, provider, factoryContract, walletContract, isLoading: false, tokenList })
         );

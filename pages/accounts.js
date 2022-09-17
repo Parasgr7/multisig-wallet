@@ -4,7 +4,6 @@ import {
   useOwnerList,
   useAccount,
   useTransferRequest,
-  useBalance
 } from "../components/hooks/web3";
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -26,7 +25,7 @@ export default function Accounts() {
 
     try {
       await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
-      const balance = await state.walletContract.methods.getBalance(selectedToken).call();
+      const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
       setBalance(state.web3.utils.fromWei(balance, "ether"));
       setDepositAmount('');
     } catch(err){
