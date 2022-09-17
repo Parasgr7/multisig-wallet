@@ -54,11 +54,19 @@ export default function Wallet({ walletList, accountAddr}) {
                             {element.walletAddress}
                             </td>
                             <td className="py-4 px-6">
-                              <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-                                onClick={() => setSelectedWalletAddr(element.walletAddress)}>
-                                <Link href='/admin'>Use Wallet</Link>
-                              </button>
+                              { element.walletAddress == state.selectedWallet ?
+                                    <button
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                                      disabled >
+                                      Selected Wallet
+                                    </button>
+                                :
+                                    <button
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                                      onClick={() => setSelectedWalletAddr(element.walletAddress)}>
+                                      <Link href='/admin'>Use Wallet</Link>
+                                    </button>
+                              }
                             </td>
                         </tr>
                       </>

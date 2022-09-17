@@ -23,7 +23,7 @@ export const useTransferRequest = () => {
   const data = useHooks((hooks) => hooks.useTransferRequest)();
 
   return {
-    trasnfer_requests: data
+    transfer_requests: data
   };
 };
 

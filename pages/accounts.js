@@ -23,11 +23,10 @@ export default function Accounts() {
   }
 
   const deposit = async() => {
-    let amountToSend;
 
     if(selectedToken == "ETH")
     {
-      amountToSend = web3.utils.toWei(depositAmount, "ether");
+      let amountToSend = web3.utils.toWei(depositAmount, "ether");
       await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
     }
     else {
@@ -112,6 +111,7 @@ export default function Accounts() {
       </div>
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            { result.length > 0 ?
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                       <th scope="col" className="py-3 px-6">
@@ -134,9 +134,13 @@ export default function Accounts() {
                       </th>
                   </tr>
               </thead>
+              :
+              <h1>No Account Transactions</h1>
+            }
               <tbody>
               { result ? result.map((element, index) => {
-
+                var date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+                date.setUTCSeconds(element.timeOfTransaction)
                 return (
                     <>
                       <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
@@ -156,7 +160,7 @@ export default function Accounts() {
                             {element.action}
                           </td>
                           <td className="py-4 px-6">
-                            {element.timeOfTransaction}
+                            {date.toString()}
                           </td>
 
                       </tr>
