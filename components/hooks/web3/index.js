@@ -11,6 +11,14 @@ export const useAccount = () => {
 
 };
 
+export const useAccountRequest = () => {
+  const data = useHooks((hooks) => hooks.useAccountRequest)();
+
+  return {
+    account_transactions: data
+  };
+};
+
 export const useTransferRequest = () => {
   const data = useHooks((hooks) => hooks.useTransferRequest)();
 

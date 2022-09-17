@@ -30,11 +30,24 @@ contract MultiSigWallet {
         address tokenAddress;
     }
 
+    struct Account {
+
+        string ticker;
+        address sender;
+        address walletAddress;
+        uint amount;
+        uint timeOfTransaction;
+        string action;
+    }
+
+    Account[] accountTransactions;
+
     struct Transfer {
 
         string ticker;
         address sender;
         address payable receiver;
+        address walletAddress;
         uint amount;
         uint id;
         uint approvals;
@@ -135,17 +148,17 @@ contract MultiSigWallet {
         if(keccak256(bytes(ticker)) == keccak256(bytes("ETH"))) {
 
             balance[walletAddress][msg.sender]["ETH"] += msg.value;
-
         }
 
         else {
-
             balance[walletAddress][msg.sender][ticker] += amount;
-            IERC20(tokenMapping[ticker].tokenAddress).transferFrom(msg.sender, address(this), amount);
-
+            IERC20 token = IERC20(tokenMapping[ticker].tokenAddress);
+            require(token.balanceOf(msg.sender) >= amount);
+            token.transferFrom(msg.sender, address(this), amount);
         }
 
         emit fundsDeposited(ticker, msg.sender, msg.value, depositId, block.timestamp);
+        accountTransactions.push(Account(ticker, msg.sender, walletAddress, amount, block.timestamp, "Deposit"));
 
         depositId++;
 
@@ -163,12 +176,13 @@ contract MultiSigWallet {
         }
 
         else {
-
-            IERC20(tokenMapping[ticker].tokenAddress).transfer(msg.sender, amount);
-
+            IERC20 token = IERC20(tokenMapping[ticker].tokenAddress);
+            require(token.balanceOf(address(this)) >= amount,"Insufficient Token");
+            token.transfer(msg.sender, amount);
         }
 
         emit fundsWithdrawed(ticker, msg.sender, amount, withdrawalId, block.timestamp);
+        accountTransactions.push(Account(ticker, msg.sender, walletAddress, amount, block.timestamp, "Withdraw"));
 
         withdrawalId++;
 
@@ -186,7 +200,7 @@ contract MultiSigWallet {
         }
 
         balance[walletAddress][msg.sender][ticker] -= amount;
-        transferRequests.push(Transfer(ticker, msg.sender, receiver, amount, transferId, 0, block.timestamp));
+        transferRequests.push(Transfer(ticker, msg.sender, receiver, walletAddress, amount, transferId, 0, block.timestamp));
         transferId++;
         emit transferCreated(ticker, msg.sender, receiver, amount, transferId, 0, block.timestamp);
     }
@@ -287,6 +301,11 @@ contract MultiSigWallet {
     function getTransferRequests() public view returns(Transfer[] memory) {
 
         return transferRequests;
+    }
+
+    function getAccountTransactions() public view returns(Account[] memory) {
+
+        return accountTransactions;
     }
 
     function getBalance(string memory ticker, address walletAddress) public view tokenExists(ticker) returns(uint) {

@@ -1,5 +1,7 @@
 import MultiSigWallet from '../abis/MultiSigWallet.json'
 import MultiSigFactory from '../abis/MultiSigFactory.json'
+import Link from '../abis/Link.json'
+import Dai from '../abis/Dai.json'
 
 
 export const loadContract = async (contractName, web3) => {
@@ -9,10 +11,16 @@ export const loadContract = async (contractName, web3) => {
  if(contractName === "MultiSigWallet"){
    Artifact = MultiSigWallet;
 
- }else{
+ }else if (contractName === "MultiSigFactory"){
    Artifact = MultiSigFactory;
-
  }
+ else if (contractName === "LINK"){
+   Artifact = Link;
+ }
+ else{
+   Artifact = Dai;
+ }
+
   const multisig = Artifact.networks[NETWORK_ID]
   let contract = null;
 

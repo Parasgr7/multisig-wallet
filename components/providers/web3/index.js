@@ -12,12 +12,14 @@ const setListeners = (provider) => {
 };
 
 export default function Web3Provider({ children }) {
-  const createWeb3State = ({ web3, provider, factoryContract, walletContract, isLoading, selectedWallet, tokenList, selectedToken}) => {
+  const createWeb3State = ({ web3, provider, factoryContract, walletContract, LinkContract, DaiContract, isLoading, selectedWallet, tokenList, selectedToken}) => {
     return {
       web3,
       provider,
       factoryContract,
       walletContract,
+      LinkContract,
+      DaiContract,
       isLoading,
       selectedWallet,
       tokenList,
@@ -48,10 +50,12 @@ export default function Web3Provider({ children }) {
         const web3 = new Web3(provider);
         const walletContract = await loadContract("MultiSigWallet", web3);
         const factoryContract = await loadContract("MultiSigFactory", web3);
+        const LinkContract = await loadContract("LINK", web3);
+        const DaiContract = await loadContract("DAI", web3);
         const tokenList = await walletContract.methods.getTokenList().call();
         setBalance(null);
         setWeb3Api(
-          createWeb3State({ web3, provider, factoryContract, walletContract, isLoading: false, tokenList })
+          createWeb3State({ web3, provider, factoryContract, walletContract, LinkContract, DaiContract, isLoading: false, tokenList })
         );
         setListeners(provider);
       } else {

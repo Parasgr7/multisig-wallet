@@ -3,8 +3,9 @@ import { useWeb3 } from "../components/providers/web3";
 import {
   useOwnerList,
   useAccount,
-  useTransferRequest,
+  useAccountRequest,
 } from "../components/hooks/web3";
+
 const Web3 = require('web3');
 const web3 = new Web3();
 
@@ -13,7 +14,13 @@ export default function Accounts() {
   const [withdrawAmount, setWithdrawAmount] = useState(null);
   const { state, selectedToken, setBalance } = useWeb3();
   const { account } = useAccount();
-  const { trasnfer_requests } = useTransferRequest();
+  const { account_transactions } = useAccountRequest();
+
+  const result = account_transactions.data ? account_transactions.data.filter(accountTransactions) : null;
+
+  function accountTransactions(element) {
+    return element.walletAddress == state.selectedWallet;
+  }
 
   const deposit = async() => {
     let amountToSend;
@@ -21,16 +28,16 @@ export default function Accounts() {
     if(selectedToken == "ETH")
     {
       amountToSend = web3.utils.toWei(depositAmount, "ether");
-    }
-
-    try {
       await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
-      const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
-      setBalance(state.web3.utils.fromWei(balance, "ether"));
-      setDepositAmount('');
-    } catch(err){
-      console.log(err)
     }
+    else {
+      const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
+      await contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data})
+      await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data});
+    }
+    const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
+    setBalance(state.web3.utils.fromWei(balance, "ether"));
+    setDepositAmount('');
 
   }
   const withdraw = async() => {
@@ -41,7 +48,7 @@ export default function Accounts() {
     }
     try {
       await state.walletContract.methods.withdraw( selectedToken , amountToWithdraw , state.selectedWallet).send({ from: account.data });
-      const balance = await state.walletContract.methods.getBalance(selectedToken).call();
+      const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
       setBalance(state.web3.utils.fromWei(balance, "ether"));
       setWithdrawAmount('');
     } catch(err){
@@ -103,6 +110,65 @@ export default function Accounts() {
           </div>
         </div>
       </div>
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                      <th scope="col" className="py-3 px-6">
+                          Id
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                          User Address
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                          Amount
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                          Ticker
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                          Action
+                      </th>
+                      <th scope="col" className="py-3 px-6">
+                          Date Time
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+              { result ? result.map((element, index) => {
+
+                return (
+                    <>
+                      <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
+                          <td className="py-4 px-6">
+                            {index}
+                          </td>
+                          <td className="py-4 px-6">
+                            {element.sender}
+                          </td>
+                          <td className="py-4 px-6">
+                            {element.amount}
+                          </td>
+                          <td className="py-4 px-6">
+                            {element.ticker}
+                          </td>
+                          <td className="py-4 px-6">
+                            {element.action}
+                          </td>
+                          <td className="py-4 px-6">
+                            {element.timeOfTransaction}
+                          </td>
+
+                      </tr>
+                    </>
+                )
+              }): null}
+
+              </tbody>
+          </table>
+      </div>
+
+
     </>
       );
 }
