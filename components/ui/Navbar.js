@@ -2,11 +2,19 @@ import React, {useState, useEffect} from "react";
 import { Menu } from '@headlessui/react'
 import { useWeb3 } from "../../components/providers/web3";
 import Link from 'next/link'
+import { useRouter } from 'next/router';
+
 
 export default function Navbar() {
+  const router = useRouter();
   const {state, selectedToken, setSelectedToken, balance, setBalance} = useWeb3();
   const account_address = state.hooks.useAccount();
+
   useEffect(() => {
+    if(!state.selectedWallet)
+    {
+      router.push('/');
+    }
     const fetchBalance = async() => {
       if (state.walletContract && state.selectedWallet)
       {
@@ -15,6 +23,7 @@ export default function Navbar() {
       }
     }
     fetchBalance();
+
   }, [selectedToken, state.selectedWallet]);
 
   return (
@@ -46,32 +55,38 @@ export default function Navbar() {
                   <Link href='/'>
                     <a className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Wallet</a>
                   </Link>
-                  <Link href='/admin'>
-                    <a className="text-gray-300 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
-                  </Link>
-                  <Link href='/accounts'>
-                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
-                  </Link>
-                  <Link href='/transfer'>
-                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
-                  </Link>
-                  <label class="dropdown">
+                  {state.selectedWallet ?
+                      <>
+                        <Link href='/admin'>
+                      <a className="text-gray-300 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
+                    </Link>
+                    <Link href='/accounts'>
+                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
+                    </Link>
+                    <Link href='/transfer'>
+                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
+                    </Link>
+                    <label className="dropdown">
 
-                    <div class="dd-button">
-                      {selectedToken}
-                    </div>
-                    <input type="checkbox" class="dd-input" id="test"/>
+                      <div className="dd-button">
+                        {selectedToken}
+                      </div>
+                      <input type="checkbox" className="dd-input" id="test"/>
 
-                    <ul class="dd-menu">
-                      {state.tokenList? state.tokenList.map((element, index) => {
-                        return (
-                        <li id={index} onClick={() => setSelectedToken(element)}>{element}</li>
-                        )
-                      }): null }
+                      <ul className="dd-menu">
+                        {state.tokenList? state.tokenList.map((element, index) => {
+                          return (
+                          <li id={index} onClick={() => setSelectedToken(element)}>{element}</li>
+                          )
+                        }): null }
 
-                    </ul>
+                      </ul>
 
-                  </label>
+                    </label>
+                      </>
+
+
+                    : null}
                 </div>
               </div>
             </div>

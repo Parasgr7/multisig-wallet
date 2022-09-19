@@ -4,6 +4,7 @@ import {
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
 import { useEffect, useState } from "react";
+import Router from 'next/router'
 import Link from 'next/link';
 
 export default function Admin() {
@@ -11,7 +12,6 @@ export default function Admin() {
   const { account } = useAccount();
   const {state} = useWeb3();
   const [address, setAddress] = useState(null);
-
 
   const removeSelectedOwner = async(accountAddress) => {
 

@@ -3,6 +3,7 @@ import { handler as createTransferRequestHook } from "./useTransferRequest"
 import { handler as createWalletList } from "./useWalletList"
 import { handler as createOwnerList } from "./useOwnersList"
 import { handler as createAccountRequest } from "./useAccountRequest"
+import { handler as createApprovalLimit } from "./useApprovalLimit"
 
 export const setupHooks = ({web3, provider, factoryContract, walletContract, selectedWallet}) => {
 
@@ -11,7 +12,8 @@ export const setupHooks = ({web3, provider, factoryContract, walletContract, sel
         useAccountRequest: createAccountRequest(web3, walletContract),
         useTransferRequest: createTransferRequestHook(web3, walletContract),
         useWalletList: createWalletList(web3, factoryContract),
-        useOwnerList: createOwnerList(web3, factoryContract, selectedWallet),
+        useOwnerList: createOwnerList(web3, factoryContract),
+        useApprovalLimit: createApprovalLimit(web3, walletContract),
 
     }
 }

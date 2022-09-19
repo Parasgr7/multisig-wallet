@@ -207,21 +207,16 @@ contract MultiSigWallet {
 
     function cancelTransferRequest(uint id, address walletAddress) public onlyOwners(walletAddress) {
 
-        string memory ticker = transferRequests[id].ticker;
         bool hasBeenFound = false;
         uint transferIndex = 0;
         for (uint i = 0; i < transferRequests.length; i++) {
-
             if(transferRequests[i].id == id) {
-
                 hasBeenFound = true;
                 break;
-
             }
-
              transferIndex++;
         }
-
+        string memory ticker = transferRequests[transferIndex].ticker;
         require(transferRequests[transferIndex].sender == msg.sender, "only the transfer creator can cancel");
         require(hasBeenFound, "transfer request does not exist");
 
@@ -233,26 +228,21 @@ contract MultiSigWallet {
         transferRequests.pop();
     }
 
-    function approveTransferRequest(uint id, address walletAddress) public onlyOwners(walletAddress) {
+    function approveTransferRequest(uint id, address walletAddress) public payable onlyOwners(walletAddress) {
 
-        string memory ticker = transferRequests[id].ticker;
         bool hasBeenFound = false;
         uint transferIndex = 0;
         for (uint i = 0; i < transferRequests.length; i++) {
-
             if(transferRequests[i].id == id) {
-
                 hasBeenFound = true;
                 break;
-
             }
-
              transferIndex++;
         }
-
-        require(hasBeenFound, "only the transfer creator can cancel");
+        string memory ticker = transferRequests[transferIndex].ticker;
+        require(hasBeenFound, "tx not found");
         require(approvals[msg.sender][id] == false, "cannot approve the same transfer twice");
-        require(transferRequests[transferIndex].sender != msg.sender);
+        require(transferRequests[transferIndex].sender != msg.sender, "Transfer creator cannot approve");
 
         approvals[msg.sender][id] = true;
         transferRequests[transferIndex].approvals++;
@@ -282,10 +272,8 @@ contract MultiSigWallet {
             transferRequests[id].receiver.transfer(transferRequests[id].amount);
         }
         else {
-
             IERC20(tokenMapping[ticker].tokenAddress).transfer(transferRequests[id].receiver, transferRequests[id].amount);
         }
-
 
         emit fundsTransfered(ticker, msg.sender, transferRequests[id].receiver, transferRequests[id].amount, transferRequests[id].id, transferRequests[id].approvals, transferRequests[id].timeOfTransaction);
 
@@ -309,8 +297,14 @@ contract MultiSigWallet {
     }
 
     function getBalance(string memory ticker, address walletAddress) public view tokenExists(ticker) returns(uint) {
+        MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
+        uint walletBalance;
+        MultiSigFactory.WalletUsers[] memory walletOwners = factory.getWalletOwners(walletAddress);
+        for (uint i = 0; i < walletOwners.length; i++) {
+                walletBalance += balance[walletAddress][walletOwners[i].owners][ticker];
 
-        return balance[walletAddress][msg.sender][ticker];
+            }
+        return walletBalance;
     }
 
     function getApprovalLimit(address walletAddress) public view returns (uint) {

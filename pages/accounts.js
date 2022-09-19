@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWeb3 } from "../components/providers/web3";
+import Router from 'next/router'
 import {
   useOwnerList,
   useAccount,
@@ -14,13 +15,7 @@ export default function Accounts() {
   const [withdrawAmount, setWithdrawAmount] = useState(null);
   const { state, selectedToken, setBalance } = useWeb3();
   const { account } = useAccount();
-  const { account_transactions } = useAccountRequest();
-
-  const result = account_transactions.data ? account_transactions.data.filter(accountTransactions) : null;
-
-  function accountTransactions(element) {
-    return element.walletAddress == state.selectedWallet;
-  }
+  const { result } = useAccountRequest();
 
   const deposit = async() => {
 
@@ -111,7 +106,7 @@ export default function Accounts() {
       </div>
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            { result.length > 0 ?
+            { result && result.length > 0 ?
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                       <th scope="col" className="py-3 px-6">
@@ -135,7 +130,7 @@ export default function Accounts() {
                   </tr>
               </thead>
               :
-              <h1>No Account Transactions</h1>
+              null
             }
               <tbody>
               { result ? result.map((element, index) => {
@@ -160,7 +155,7 @@ export default function Accounts() {
                             {element.action}
                           </td>
                           <td className="py-4 px-6">
-                            {date.toString()}
+                            {date.toString().split("(")[0]}
                           </td>
 
                       </tr>

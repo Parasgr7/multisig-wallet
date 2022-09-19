@@ -109,25 +109,6 @@ export function useHooks(callback) {
   return callback(state.hooks);
 }
 
-export const useAccount = async(web3) => {
-
-  let account = null;
-  if (web3){
-    const accounts = await web3.eth.getAccounts();
-    account = accounts[0];
-
-    if (!account) {
-      throw new Error(
-        "Failed to detect Account. Please refresh your browser"
-      );
-    }
-  }
-  console.log(account);
-  return {
-    account
-  };
-
-};
 /*
 
 getHooks() method returns a dictionary containing name of the hook (key) and the handler to the hook (value)

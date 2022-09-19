@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
+import Router from 'next/router'
 import {
   useOwnerList,
   useAccount,
-  useTransferRequest
+  useTransferRequest,
+  useApprovalLimit
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
 
 export default function Transfer() {
   const [address, setAddress] = useState(null);
   const [transferAmount, setTransferAmount] = useState(null);
-  const { transfer_requests } = useTransferRequest();
+  const { result } = useTransferRequest();
+  const { approvalLimit } = useApprovalLimit();
   const { account } = useAccount();
   const { state, selectedToken, setBalance } = useWeb3();
-
-  const result = transfer_requests.data ? transfer_requests.data.filter(accountTransactions) : null;
-
-  function accountTransactions(element) {
-    return element.walletAddress == state.selectedWallet;
-  }
 
   const createTransfer = async() => {
 
@@ -25,28 +22,32 @@ export default function Transfer() {
         let amountToSend = state.web3.utils.toWei(transferAmount, "ether");
         await state.walletContract.methods.createTransferRequest(selectedToken, address, amountToSend, state.selectedWallet).send({ from: account.data })
         setAddress('');
+        const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
+        setBalance(state.web3.utils.fromWei(balance, "ether"));
         setTransferAmount('');
       } catch(err){
         console.log(err)
       }
   }
 
-  const cancelTransferRequest = async(transaction_id) => {
+  const approveTransRequest = async(transaction_id) => {
 
       try {
-        await state.walletContract.methods.cancelTransferRequest( transaction_id, state.selectedWallet).send({ from: account.data })
+        await state.walletContract.methods.approveTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
       } catch(err){
-        console.log(err)
+        console.log(err.message);
       }
   }
 
-  const approveTransferRequest = async(transaction_id) => {
+  const cancelTransRequest = async(transaction_id) => {
       try {
-        await state.walletContract.methods.approveTransferRequest( transaction_id, state.selectedWallet).send({ from: account.data })
+        await state.walletContract.methods.cancelTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
       } catch(err){
-        console.log(err)
+        console.log(err.message)
       }
   }
+
+
 
   return (
     <>
@@ -88,7 +89,7 @@ export default function Transfer() {
       </div>
       <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          { result.length > 0 ?
+          { result && result.length > 0 ?
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                       <th scope="col" className="py-3 px-6">
@@ -107,7 +108,7 @@ export default function Transfer() {
                           Ticker
                       </th>
                       <th scope="col" className="py-3 px-6">
-                          Approval Count
+                          Approval Count / Limit
                       </th>
                       <th scope="col" className="py-3 px-6">
                           Date Time
@@ -116,12 +117,12 @@ export default function Transfer() {
                           Approve
                       </th>
                       <th scope="col" className="py-3 px-6">
-                          Reject
+                          Cancel
                       </th>
                   </tr>
               </thead>
             :
-            <h1>No Transfer Transactions</h1>
+            null
           }
               <tbody>
               { result ? result.map((element, index) => {
@@ -146,26 +147,39 @@ export default function Transfer() {
                             {element.ticker}
                           </td>
                           <td className="py-4 px-6">
-                            {element.approvals}
+                            {element.approvals + "/" + approvalLimit.data}
                           </td>
                           <td className="py-4 px-6">
                             {date.toString().split("(")[0]}
                           </td>
                           <td className="py-4 px-6">
+                            {element.sender == account.data ?
+                              <button
+                                type="button"
+                                disabled
+                                className=" inline-block px-6 py-2.5 bg-gray-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-800 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                                >
+                                Pending
+                              </button>
+                            :
                             <button
                               type="button"
                               className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                              onClick={() => approveTransferRequest(element.id)}>
+                              onClick={() => approveTransRequest(element.id)}>
                               Approve
                             </button>
+                          }
+
                           </td>
                           <td className="py-4 px-6">
+                            {element.sender == account.data ?
                             <button
                               type="button"
-                              className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
-                              onClick={() => cancelTransferRequest(element.id)}>
+                              className=" inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-800 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
+                              onClick={() => cancelTransRequest(element.id)}>
                               Cancel
                             </button>
+                           : null}
                           </td>
 
                       </tr>
