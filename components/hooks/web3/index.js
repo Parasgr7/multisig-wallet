@@ -14,33 +14,44 @@ export const useAccount = () => {
 
 export const useAccountRequest = () => {
   const { state } = useWeb3();
-  const account_transactions = useHooks((hooks) => hooks.useAccountRequest)();
 
+  const account_transactions = useHooks((hooks) => hooks.useAccountRequest)();
   const result = account_transactions.data ? account_transactions.data.filter(accountTransactions) : "";
 
   function accountTransactions(element) {
     return element.walletAddress == state.selectedWallet;
   }
 
+
   return {
     result
   };
+
 };
 
 export const useTransferRequest = () => {
   const { state } = useWeb3();
+  const { account } = useAccount();
+
   const transfer_requests = useHooks((hooks) => hooks.useTransferRequest)();
 
-  const result = transfer_requests.data ? transfer_requests.data.filter(accountTransactions) : "";
+  const pending_transactions = transfer_requests.data ? transfer_requests.data.filter(pendingTransactions) : "";
+  const cancel_transactions = transfer_requests.data ? transfer_requests.data.filter(canelTransactions) : "";
 
-  function accountTransactions(element) {
-    return element.walletAddress == state.selectedWallet;
+  function pendingTransactions(element) {
+    return element.walletAddress == state.selectedWallet && element.sender != account.data ;
   }
 
+  function canelTransactions(element) {
+    return element.walletAddress == state.selectedWallet && element.sender == account.data;
+  }
 
   return {
-    result
+    result_length: pending_transactions.length + cancel_transactions.length,
+    pending_transactions,
+    cancel_transactions
   };
+
 };
 
 export const useWalletList = () => {

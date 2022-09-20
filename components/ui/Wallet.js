@@ -21,12 +21,10 @@ export default function Wallet({ walletList, accountAddr}) {
     <div>
       <div class="grid my-10 items-center justify-center text-center">
         <div className="max-w-sm w-96 rounded-lg overflow-hidden shadow-lg">
-          <div className="py-3 px-6 font-semibold border-b border-gray-300">
-            Wallet
+          <div className="px-6 py-4 font-bold border-b border-gray-300">
+            Add New Wallet
           </div>
-          <div className="px-6 py-4">
-            <div className="font-medium text-xl mb-2">Create New Wallet</div>
-          </div>
+
           <div className="px-6 py-4 ">
             <button className="bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
               onClick={() => createNewWallet()}>

@@ -92,11 +92,11 @@ export default function Navbar() {
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
-              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-lg">
                   <b>Wallet ID: </b>{state.selectedWallet ? state.selectedWallet.slice(0,5) + "..." + state.selectedWallet.slice(state.selectedWallet.length-5) : "N/A"}
               </a>
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                <b>Balance:  </b>{balance? balance : "N/A"}
+                <b>Balance:  </b>{balance? balance +" " + selectedToken : "N/A"}
               </a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">

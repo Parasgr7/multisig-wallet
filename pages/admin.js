@@ -34,7 +34,7 @@ export default function Admin() {
 
   return (
     <>
-    <div class="grid my-10 items-center justify-center">
+    <div class="flex my-10 items-center justify-center">
         <div className="w-full block w-96 rounded-lg shadow-lg bg-white max-w-sm text-center">
           <div className="py-3 px-6 font-semibold border-b border-gray-300">
             Add Owner
