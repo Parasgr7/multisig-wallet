@@ -53,18 +53,18 @@ export default function Navbar() {
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
                   <Link href='/'>
-                    <a className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Wallet</a>
+                    <a className={router.pathname == "/" ? "active navbarItem" : "navbarItem"}>Wallet</a>
                   </Link>
                   {state.selectedWallet ?
                       <>
                         <Link href='/admin'>
-                      <a className="text-gray-300 hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
+                      <a className={router.pathname == "/admin" ? "active navbarItem" : "navbarItem"}>Admin</a>
                     </Link>
                     <Link href='/accounts'>
-                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Accounts</a>
+                      <a className={router.pathname == "/accounts" ? "active navbarItem" : "navbarItem"}>Accounts</a>
                     </Link>
                     <Link href='/transfer'>
-                      <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Transfers</a>
+                      <a className={router.pathname == "/transfer" ? "active navbarItem" : "navbarItem"}>Transfers</a>
                     </Link>
                     <label className="dropdown">
 
@@ -91,13 +91,16 @@ export default function Navbar() {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+
               <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                Wallet ID:  {state.selectedWallet ? state.selectedWallet.slice(0,7) + "..." + state.selectedWallet.slice(state.selectedWallet.length-10) : "N/A"}
+                  <b>Wallet ID: </b>{state.selectedWallet ? state.selectedWallet.slice(0,5) + "..." + state.selectedWallet.slice(state.selectedWallet.length-5) : "N/A"}
               </a>
-              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Balance:  {balance? balance : "N/A"}</a>
+              <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                <b>Balance:  </b>{balance? balance : "N/A"}
+              </a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
-                {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-10) : null}
+                {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-7) : null}
               </div>
             </div>
           </div>
