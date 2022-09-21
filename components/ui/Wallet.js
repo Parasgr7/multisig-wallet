@@ -33,7 +33,7 @@ export default function Wallet({ walletList, accountAddr}) {
 
   return (
     <div>
-      <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
+      <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
       <LoadingSpinerComponent/>
       <div className="grid my-10 items-center justify-center text-center">
         <div className="max-w-sm w-96 rounded-lg overflow-hidden shadow-lg bg-white">

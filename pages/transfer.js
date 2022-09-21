@@ -89,7 +89,7 @@ export default function Transfer() {
 
   return (
     <>
-    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
+    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
     <LoadingSpinerComponent/>
     <div className="flex my-10 items-center justify-center text-center">
         <div className="block w-full rounded-lg shadow-lg bg-white max-w-sm text-center">

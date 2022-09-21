@@ -58,7 +58,7 @@ export default function Admin() {
 
   return (
     <>
-    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
+    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
     <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
         <div className="w-full block w-96 rounded-lg shadow-lg bg-white max-w-sm text-center">
