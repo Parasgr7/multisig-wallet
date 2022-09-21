@@ -55,6 +55,7 @@ export default function Transfer() {
         await trackPromise(
           state.walletContract.methods.approveTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
         )
+        toast.success('Transfer Approved!', {hideProgressBar: true,theme: "white"});
 
       } catch(e){
         if (e.code === 4001){
@@ -73,6 +74,7 @@ export default function Transfer() {
         await trackPromise(
           state.walletContract.methods.cancelTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
         )
+        toast.error('Transfer Cancelled!', {hideProgressBar: true,theme: "white"});
       } catch(e){
         if (e.code === 4001){
              toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});

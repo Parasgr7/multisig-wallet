@@ -100,7 +100,7 @@ export default function Navbar() {
               </a>
 
               <div className="px-4 py-1 ml-4 text-white border bg-gray-800 border-gray-400 rounded-md">
-                {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-7) : null}
+                {account_address.data ? account_address.data.slice(0,7) + "..." + account_address.data.slice(account_address.data.length-7) : "UserID: N/A"}
               </div>
             </div>
           </div>

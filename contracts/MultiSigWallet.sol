@@ -85,7 +85,7 @@ contract MultiSigWallet {
            }
        }
 
-       require(isOwner == true, "only wallet owners can call this function");
+       require(isOwner == true, "Only wallet owners can call this function");
        _;
 
     }
@@ -94,7 +94,7 @@ contract MultiSigWallet {
 
         if(keccak256(bytes(ticker)) != keccak256(bytes("ETH"))) {
 
-            require(tokenMapping[ticker].tokenAddress != address(0), "token does not exixts");
+            require(tokenMapping[ticker].tokenAddress != address(0), "Token does not exixts");
         }
         _;
     }
@@ -103,7 +103,7 @@ contract MultiSigWallet {
 
         for (uint i = 0; i < tokenList.length; i++) {
 
-            require(keccak256(bytes(tokenList[i])) != keccak256(bytes(ticker)), "cannot add duplicate tokens");
+            require(keccak256(bytes(tokenList[i])) != keccak256(bytes(ticker)), "Cannot add duplicate tokens");
         }
 
         require(keccak256(bytes(ERC20(_tokenAddress).symbol())) == keccak256(bytes(ticker)));
@@ -143,7 +143,7 @@ contract MultiSigWallet {
 
     function deposit(string memory ticker, uint amount, address walletAddress) public payable onlyOwners(walletAddress) tokenExists(ticker) {
 
-        require(balance[walletAddress][msg.sender][ticker] >= 0, "cannot deposiit a calue of 0");
+        require(balance[walletAddress][msg.sender][ticker] >= 0, "Cannot deposit 0 amount");
 
         if(keccak256(bytes(ticker)) == keccak256(bytes("ETH"))) {
 
@@ -192,11 +192,11 @@ contract MultiSigWallet {
 
         MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
 
-        require(balance[walletAddress][msg.sender][ticker] >= amount, "insufficent funds to create a transfer");
+        require(balance[walletAddress][msg.sender][ticker] >= amount, "Insufficent funds to create a Transfer");
 
         for (uint i = 0; i < factory.getWalletOwners(walletAddress).length; i++) {
 
-            require(factory.getWalletOwners(walletAddress)[i].owners != receiver, "cannot transfer funds withiwn the wallet");
+            require(factory.getWalletOwners(walletAddress)[i].owners != receiver, "Cannot transfer funds withiwn the wallet");
         }
 
         balance[walletAddress][msg.sender][ticker] -= amount;
@@ -217,14 +217,22 @@ contract MultiSigWallet {
              transferIndex++;
         }
         string memory ticker = transferRequests[transferIndex].ticker;
-        require(transferRequests[transferIndex].sender == msg.sender, "only the transfer creator can cancel");
-        require(hasBeenFound, "transfer request does not exist");
+        require(transferRequests[transferIndex].sender == msg.sender, "Only the transfer creator can cancel");
+        require(hasBeenFound, "Transfer request does not exist");
 
         balance[walletAddress][msg.sender][ticker] += transferRequests[transferIndex].amount;
 
         transferRequests[transferIndex] = transferRequests[transferRequests.length - 1];
 
-        emit transferCancelled(ticker, msg.sender, transferRequests[transferIndex].receiver, transferRequests[transferIndex].amount, transferRequests[transferIndex].id, transferRequests[transferIndex].approvals, transferRequests[transferIndex].timeOfTransaction);
+        emit transferCancelled(
+            ticker,
+            msg.sender,
+            transferRequests[transferIndex].receiver,
+            transferRequests[transferIndex].amount,
+            transferRequests[transferIndex].id,
+            transferRequests[transferIndex].approvals,
+            transferRequests[transferIndex].timeOfTransaction);
+
         transferRequests.pop();
     }
 
@@ -240,8 +248,8 @@ contract MultiSigWallet {
              transferIndex++;
         }
         string memory ticker = transferRequests[transferIndex].ticker;
-        require(hasBeenFound, "tx not found");
-        require(approvals[msg.sender][id] == false, "cannot approve the same transfer twice");
+        require(hasBeenFound, "Tx not found");
+        require(approvals[msg.sender][id] == false, "Cannot approve the same transfer twice");
         require(transferRequests[transferIndex].sender != msg.sender, "Transfer creator cannot approve");
 
         approvals[msg.sender][id] = true;

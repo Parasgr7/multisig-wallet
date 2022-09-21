@@ -53,59 +53,46 @@ export default function Wallet({ walletList, accountAddr}) {
       <div className="grid my-10 place-content-center">
           <h1 className="text-3xl font-light">My Wallets</h1>
       </div>
-      <div className="grid text-secondary-content place-content-center">
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" className="py-3 px-6">
-                            Wallet ID
-                        </th>
-                        <th scope="col" className="py-3 px-6">
-                            Wallet Address
-                        </th>
-                        <th scope="col" className="py-3 px-6">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                  { walletList ? walletList.map((element, index) => {
-                    return (
-                        <>
-                          <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
 
-                              <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                              {index}
-                              </th>
-                              <td className="py-4 px-6">
-                              {element.walletAddress}
-                              </td>
-                              <td className="py-4 px-6">
-                                { element.walletAddress == state.selectedWallet ?
-                                      <button
-                                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed"
-                                        disabled >
-                                        Selected Wallet
-                                      </button>
-                                  :
-                                    <Link href='/admin' className="text-white hover:bg-blue-700">
-                                      <button
-                                        className="bg-blue-500  hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
-                                        onClick={() => setSelectedWalletAddr(element.walletAddress)}>
-                                        Use Wallet
-                                      </button>
-                                    </Link>
-                                }
-                              </td>
-                          </tr>
-                        </>
-                      );
-                  }): null}
-
-                </tbody>
-            </table>
+      <div class="flex flex-wrap -mb-4">
+        <div class="w-1/3 mb-4">
         </div>
+      </div>
+
+
+      <div class="flex flex-wrap -mb-4 my-10 items-center justify-center">
+        { walletList ? walletList.map((element, index) => {
+          return(
+            <div className="block w-1/3 mb-4 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
+              <div className="py-3 px-6 font-semibold border-b border-gray-300">
+                Wallet {index + 1}
+              </div>
+              <div className="p-6">
+                <p className="text-gray-500 text-medium mb-4 break-words">
+                  {element.walletAddress}
+                </p>
+              </div>
+              <div className="py-3 px-6 font-semibold border-t border-gray-300">
+                { element.walletAddress == state.selectedWallet ?
+                      <button
+                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed"
+                        disabled >
+                        Selected Wallet
+                      </button>
+                  :
+                    <Link href='/admin' className="text-white hover:bg-blue-700">
+                      <button
+                        className="bg-blue-500  hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                        onClick={() => setSelectedWalletAddr(element.walletAddress)}>
+                        Use Wallet
+                      </button>
+                    </Link>
+                }
+              </div>
+            </div>
+          )
+
+        }): null }
       </div>
     </div>
   )
