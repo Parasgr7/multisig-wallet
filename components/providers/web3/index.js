@@ -3,7 +3,6 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import { setupHooks } from "./hooks/setupHooks";
 import { loadContract } from "../../../utils/loadContract";
-import Navbar from "../../../components/ui/Navbar"
 
 const Web3Context = createContext(null);
 
@@ -94,7 +93,6 @@ export default function Web3Provider({ children }) {
 
   return (
     <Web3Context.Provider value={{state:_web3Api, selectedToken, setSelectedToken, balance, setBalance}}>
-      <Navbar />
       {children}
     </Web3Context.Provider>
   );

@@ -6,6 +6,9 @@ import { useWeb3 } from "../components/providers/web3";
 import { useEffect, useState } from "react";
 import Router from 'next/router'
 import Link from 'next/link';
+import { trackPromise} from 'react-promise-tracker';
+import { LoadingSpinerComponent } from "../utils/Spinner";
+
 
 export default function Admin() {
   const { ownerList } = useOwnerList();
@@ -16,7 +19,9 @@ export default function Admin() {
   const removeSelectedOwner = async(accountAddress) => {
 
     try {
-      await state.walletContract.methods.removeWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
+      await trackPromise (
+        state.walletContract.methods.removeWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
+      )
     } catch(err){
       console.log(err)
     }
@@ -25,7 +30,9 @@ export default function Admin() {
   const addOwnerAddress = async(accountAddress) => {
 
     try {
-      await state.walletContract.methods.addWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
+      await trackPromise (
+        state.walletContract.methods.addWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
+      )
       setAddress('');
     } catch(err){
       console.log(err)
@@ -34,10 +41,11 @@ export default function Admin() {
 
   return (
     <>
+    <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
         <div className="w-full block w-96 rounded-lg shadow-lg bg-white max-w-sm text-center">
           <div className="py-3 px-6 font-semibold border-b border-gray-300">
-            Add Owner
+            New Owner
           </div>
           <div className="p-6">
             <p className="text-gray-700 text-base mb-4">
@@ -52,9 +60,9 @@ export default function Admin() {
             </p>
             <button
               type="button"
-              className=" inline-block px-6 py-2.5 bg-blue-600 text-white w-full font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+              className='bg-blue-500 uppercase w-full hover:bg-blue-700 text-white font-base py-2 px-4 border border-blue-700 rounded hover:bg-blue-700'
               onClick={() => addOwnerAddress(address)}>
-              Add
+              Add Owner
             </button>
           </div>
         </div>
@@ -87,7 +95,7 @@ export default function Admin() {
                       </td>
                       <td className="py-4 px-6">
                         {element.owners != account.data ? (<button
-                          className="inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-800 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
+                          className='inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md  active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out hover:bg-red-800 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0'
                           onClick={() => removeSelectedOwner(element.owners)}>
                           Remove Owner
                         </button>): null}

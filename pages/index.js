@@ -2,15 +2,12 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Wallet from "../components/ui/Wallet"
 import { useEffect, useState } from "react"
-
 import {
   useAccount,
   useTransferRequest,
   useWalletList,
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
-import Navbar from "../components/ui/Navbar"
-
 
 export default function Home() {
   const { account } = useAccount();
@@ -24,7 +21,6 @@ export default function Home() {
       <Head>
         <title>MultiSigWallet DApp</title>
       </Head>
-
       {!state.isLoading ? (
         account.data ?
         (<>

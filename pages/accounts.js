@@ -9,6 +9,9 @@ import {
 
 const Web3 = require('web3');
 const web3 = new Web3();
+import { trackPromise} from 'react-promise-tracker';
+import { LoadingSpinerComponent } from "../utils/Spinner";
+
 
 export default function Accounts() {
   const [depositAmount, setDepositAmount] = useState(null);
@@ -22,12 +25,17 @@ export default function Accounts() {
     if(selectedToken == "ETH")
     {
       let amountToSend = web3.utils.toWei(depositAmount, "ether");
-      await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend});
+      await trackPromise(
+        state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend})
+      )
     }
     else {
       const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
-      await contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data})
-      await state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data});
+      await trackPromise(
+         contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data }),
+         state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
+      )
+
     }
     const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
     setBalance(state.web3.utils.fromWei(balance, "ether"));
@@ -41,7 +49,9 @@ export default function Accounts() {
       amountToWithdraw = web3.utils.toWei(withdrawAmount, "ether");
     }
     try {
-      await state.walletContract.methods.withdraw( selectedToken , amountToWithdraw , state.selectedWallet).send({ from: account.data });
+      await trackPromise(
+        state.walletContract.methods.withdraw( selectedToken , amountToWithdraw , state.selectedWallet).send({ from: account.data })
+      )
       const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
       setBalance(state.web3.utils.fromWei(balance, "ether"));
       setWithdrawAmount('');
@@ -52,6 +62,7 @@ export default function Accounts() {
   }
   return (
     <>
+    <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
       <div className="block w-96 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
         <div className="py-3 px-6 font-semibold border-b border-gray-300">

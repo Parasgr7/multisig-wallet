@@ -7,6 +7,10 @@ import {
   useApprovalLimit
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
+import { trackPromise} from 'react-promise-tracker';
+import { LoadingSpinerComponent } from "../utils/Spinner";
+
+
 
 export default function Transfer() {
   const [address, setAddress] = useState(null);
@@ -24,7 +28,9 @@ export default function Transfer() {
 
       try {
         let amountToSend = state.web3.utils.toWei(transferAmount, "ether");
-        await state.walletContract.methods.createTransferRequest(selectedToken, address, amountToSend, state.selectedWallet).send({ from: account.data })
+        await trackPromise(
+          state.walletContract.methods.createTransferRequest(selectedToken, address, amountToSend, state.selectedWallet).send({ from: account.data })
+        )
         setAddress('');
         const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
         setBalance(state.web3.utils.fromWei(balance, "ether"));
@@ -37,7 +43,10 @@ export default function Transfer() {
   const approveTransRequest = async(transaction_id) => {
 
       try {
-        await state.walletContract.methods.approveTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
+        await trackPromise(
+          state.walletContract.methods.approveTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
+        )
+
       } catch(err){
         console.log(err.message);
       }
@@ -45,7 +54,9 @@ export default function Transfer() {
 
   const cancelTransRequest = async(transaction_id) => {
       try {
-        await state.walletContract.methods.cancelTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
+        await trackPromise(
+          state.walletContract.methods.cancelTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
+        )
       } catch(err){
         console.log(err.message)
       }
@@ -55,6 +66,7 @@ export default function Transfer() {
 
   return (
     <>
+    <LoadingSpinerComponent/>
     <div className="flex my-10 items-center justify-center text-center">
         <div className="block w-full rounded-lg shadow-lg bg-white max-w-sm text-center">
           <div className="py-3 px-6 font-semibold border-b border-gray-300">
