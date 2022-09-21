@@ -9,6 +9,8 @@ import {
 import { useWeb3 } from "../components/providers/web3";
 import { trackPromise} from 'react-promise-tracker';
 import { LoadingSpinerComponent } from "../utils/Spinner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -35,8 +37,15 @@ export default function Transfer() {
         const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
         setBalance(state.web3.utils.fromWei(balance, "ether"));
         setTransferAmount('');
-      } catch(err){
-        console.log(err)
+      } catch(e){
+        if (e.code === 4001){
+             toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+          }
+          else if (e.code === -32603)
+          {
+             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+          }
       }
   }
 
@@ -47,8 +56,15 @@ export default function Transfer() {
           state.walletContract.methods.approveTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
         )
 
-      } catch(err){
-        console.log(err.message);
+      } catch(e){
+        if (e.code === 4001){
+             toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+          }
+          else if (e.code === -32603)
+          {
+             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+          }
       }
   }
 
@@ -57,8 +73,15 @@ export default function Transfer() {
         await trackPromise(
           state.walletContract.methods.cancelTransferRequest(Number(transaction_id), state.selectedWallet).send({ from: account.data })
         )
-      } catch(err){
-        console.log(err.message)
+      } catch(e){
+        if (e.code === 4001){
+             toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+          }
+          else if (e.code === -32603)
+          {
+             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+          }
       }
   }
 
@@ -66,6 +89,7 @@ export default function Transfer() {
 
   return (
     <>
+    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
     <LoadingSpinerComponent/>
     <div className="flex my-10 items-center justify-center text-center">
         <div className="block w-full rounded-lg shadow-lg bg-white max-w-sm text-center">

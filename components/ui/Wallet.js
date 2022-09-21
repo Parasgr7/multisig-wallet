@@ -3,6 +3,8 @@ import { useWeb3 } from "../../components/providers/web3";
 import Link from 'next/link';
 import { trackPromise} from 'react-promise-tracker';
 import { LoadingSpinerComponent } from "../../utils/Spinner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Wallet({ walletList, accountAddr}) {
@@ -17,13 +19,21 @@ export default function Wallet({ walletList, accountAddr}) {
       await trackPromise(
          state.factoryContract.methods.createNewWallet().send({ from: accountAddr })
       );
-    } catch(err){
-      console.log(err)
+    } catch(e){
+      if (e.code === 4001){
+           toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+        }
+        else if (e.code === -32603)
+        {
+           var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+          toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+        }
     }
   }
 
   return (
     <div>
+      <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
       <LoadingSpinerComponent/>
       <div className="grid my-10 items-center justify-center text-center">
         <div className="max-w-sm w-96 rounded-lg overflow-hidden shadow-lg bg-white">

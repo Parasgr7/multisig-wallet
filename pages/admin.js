@@ -8,6 +8,9 @@ import Router from 'next/router'
 import Link from 'next/link';
 import { trackPromise} from 'react-promise-tracker';
 import { LoadingSpinerComponent } from "../utils/Spinner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 export default function Admin() {
@@ -22,8 +25,15 @@ export default function Admin() {
       await trackPromise (
         state.walletContract.methods.removeWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
       )
-    } catch(err){
-      console.log(err)
+    } catch(e){
+      if (e.code === 4001){
+           toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+        }
+        else if (e.code === -32603)
+        {
+           var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+          toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+        }
     }
   }
 
@@ -34,13 +44,21 @@ export default function Admin() {
         state.walletContract.methods.addWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
       )
       setAddress('');
-    } catch(err){
-      console.log(err)
+    } catch(e){
+      if (e.code === 4001){
+           toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+        }
+        else if (e.code === -32603)
+        {
+           var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+          toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+        }
     }
   }
 
   return (
     <>
+    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
     <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
         <div className="w-full block w-96 rounded-lg shadow-lg bg-white max-w-sm text-center">

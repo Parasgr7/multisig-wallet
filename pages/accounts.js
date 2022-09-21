@@ -11,6 +11,8 @@ const Web3 = require('web3');
 const web3 = new Web3();
 import { trackPromise} from 'react-promise-tracker';
 import { LoadingSpinerComponent } from "../utils/Spinner";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Accounts() {
@@ -25,16 +27,38 @@ export default function Accounts() {
     if(selectedToken == "ETH")
     {
       let amountToSend = web3.utils.toWei(depositAmount, "ether");
-      await trackPromise(
-        state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend})
-      )
+      try{
+        await trackPromise(
+          state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend})
+        )
+      }catch(e){
+        if (e.code === 4001){
+             toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+          }
+          else if (e.code === -32603)
+          {
+             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+          }
+      }
     }
     else {
       const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
-      await trackPromise(
-         contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data }),
-         state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
-      )
+      try{
+        await trackPromise(
+           contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data }),
+           state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
+        )
+      }catch(e){
+        if (e.code === 4001){
+             toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+          }
+          else if (e.code === -32603)
+          {
+             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+          }
+      }
 
     }
     const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
@@ -56,12 +80,20 @@ export default function Accounts() {
       setBalance(state.web3.utils.fromWei(balance, "ether"));
       setWithdrawAmount('');
     } catch(err){
-      console.log(err)
+        if(e.code === 4001){
+           toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
+        }
+        else if (e.code === -32603)
+        {
+           var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+          toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+        }
     }
 
   }
   return (
     <>
+    <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#948dbb" }}/>
     <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
       <div className="block w-96 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
