@@ -7,8 +7,6 @@ import {
   useAccountRequest,
 } from "../components/hooks/web3";
 
-const Web3 = require('web3');
-const web3 = new Web3();
 import { trackPromise} from 'react-promise-tracker';
 import { LoadingSpinerComponent } from "../utils/Spinner";
 import { ToastContainer, toast } from 'react-toastify';
@@ -26,7 +24,7 @@ export default function Accounts() {
 
     if(selectedToken == "ETH")
     {
-      let amountToSend = web3.utils.toWei(depositAmount, "ether");
+      let amountToSend = state.web3.utils.toWei(depositAmount, "ether");
       try{
         await trackPromise(
           state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend})
@@ -44,10 +42,13 @@ export default function Accounts() {
     }
     else {
       const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
+      await trackPromise(
+          contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data })
+      )
+
       try{
         await trackPromise(
-           contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data }),
-           state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
+          state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
         )
       }catch(e){
         if (e.code === 4001){
@@ -55,8 +56,9 @@ export default function Accounts() {
           }
           else if (e.code === -32603)
           {
-             var error_msg = JSON.parse( e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
-            toast.error(error_msg, {hideProgressBar: true,theme: "white"});
+            var error_msg = JSON.parse(e.message.split('\'')[1])["value"]["data"]["message"].split('revert')[1];
+
+            toast.error(error_msg.length > 0 ? error_msg : "Error!" , {hideProgressBar: true,theme: "white"});
           }
       }
 
@@ -70,7 +72,7 @@ export default function Accounts() {
     let amountToWithdraw;
     if(selectedToken == "ETH")
     {
-      amountToWithdraw = web3.utils.toWei(withdrawAmount, "ether");
+      amountToWithdraw = state.web3.utils.toWei(withdrawAmount, "ether");
     }
     try {
       await trackPromise(

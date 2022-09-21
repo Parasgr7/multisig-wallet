@@ -27,7 +27,7 @@ export default function Transfer() {
   const { state, selectedToken, setBalance } = useWeb3();
 
   const createTransfer = async() => {
-
+      !state.web3.utils.isAddress(address) ? toast.error('Invalid address', {hideProgressBar: true,theme: "white"}) : null;
       try {
         let amountToSend = state.web3.utils.toWei(transferAmount, "ether");
         await trackPromise(

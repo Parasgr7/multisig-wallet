@@ -38,7 +38,7 @@ export default function Admin() {
   }
 
   const addOwnerAddress = async(accountAddress) => {
-
+    !state.web3.utils.isAddress(accountAddress) ? toast.error('Invalid address', {hideProgressBar: true,theme: "white"}) : null;
     try {
       await trackPromise (
         state.walletContract.methods.addWalletOwner(accountAddress, state.selectedWallet).send({ from: account.data })
