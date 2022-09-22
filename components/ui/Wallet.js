@@ -51,7 +51,7 @@ export default function Wallet({ walletList, accountAddr}) {
       </div>
       </div>
       <div className="grid my-10 place-content-center">
-          <h1 className="text-3xl font-light">My Wallets</h1>
+          {walletList && walletList.length > 0 ? <h1 className="text-3xl font-light">My Wallets</h1> : null}
       </div>
 
       <div class="flex flex-wrap -mb-4">

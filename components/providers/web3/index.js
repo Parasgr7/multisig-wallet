@@ -51,7 +51,7 @@ export default function Web3Provider({ children }) {
         const factoryContract = await loadContract("MultiSigFactory", web3);
         const LinkContract = await loadContract("LINK", web3);
         const DaiContract = await loadContract("DAI", web3);
-        const tokenList = await walletContract.methods.getTokenList().call();
+        const tokenList = walletContract ? await walletContract.methods.getTokenList().call() : null;
         setBalance(null);
         setWeb3Api(
           createWeb3State({ web3, provider, factoryContract, walletContract, LinkContract, DaiContract, isLoading: false, tokenList })

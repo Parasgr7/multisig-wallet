@@ -22,6 +22,9 @@ export default function Accounts() {
   const toWei = (value) => {
     return state.web3.utils.toWei(value.toString(), 'ether');
   };
+  const toEther = (value) => {
+    return state.web3.utils.fromWei(value.toString(), 'ether');
+  };
 
   const deposit = async() => {
     if (depositAmount <= 0){
@@ -33,7 +36,7 @@ export default function Accounts() {
     {
       try{
         await trackPromise(
-          state.walletContract.methods.deposit( selectedToken , Number(depositAmount) , state.selectedWallet).send({ from: account.data, value: toWei(depositAmount)})
+          state.walletContract.methods.deposit( selectedToken , toWei(depositAmount) , state.selectedWallet).send({ from: account.data, value: toWei(depositAmount)})
         )
       }catch(e){
         if (e.code === 4001){
@@ -49,12 +52,12 @@ export default function Accounts() {
     else {
       const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
       await trackPromise(
-          contract.methods.approve(state.walletContract._address, Number(depositAmount)).send({ from: account.data })
+          contract.methods.approve(state.walletContract._address, toWei(depositAmount)).send({ from: account.data })
       )
 
       try{
         await trackPromise(
-          state.walletContract.methods.deposit( selectedToken ,  Number(depositAmount) , state.selectedWallet).send({ from: account.data})
+          state.walletContract.methods.deposit( selectedToken ,  toWei(depositAmount) , state.selectedWallet).send({ from: account.data})
         )
       }catch(e){
         if (e.code === 4001){
@@ -81,13 +84,10 @@ export default function Accounts() {
       setWithdrawAmount('');
       return;
     }
-    if(selectedToken == "ETH")
-    {
-      amountToWithdraw = state.web3.utils.toWei(withdrawAmount, "ether");
-    }
+
     try {
       await trackPromise(
-        state.walletContract.methods.withdraw( selectedToken , amountToWithdraw , state.selectedWallet).send({ from: account.data })
+        state.walletContract.methods.withdraw( selectedToken , toWei(withdrawAmount) , state.selectedWallet).send({ from: account.data })
       )
       const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
       setBalance(state.web3.utils.fromWei(balance, "ether"));
@@ -157,7 +157,7 @@ export default function Accounts() {
       </div>
     </div>
     <div class="grid my-10 items-center justify-center">
-      <h1 className="text-3xl font-light">Account Transactions</h1>
+      { result && result.length > 0 ? <h1 className="text-3xl font-light">Account Transactions</h1> : null}
     </div>
     <div class="grid items-center justify-center">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -201,7 +201,7 @@ export default function Accounts() {
                         {element.sender}
                       </td>
                       <td className="py-4 px-6">
-                        {element.amount}
+                        {toEther(element.amount)}
                       </td>
                       <td className="py-4 px-6">
                         {element.ticker}

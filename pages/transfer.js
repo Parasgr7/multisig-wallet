@@ -41,9 +41,8 @@ export default function Transfer() {
       }
       !state.web3.utils.isAddress(address) ? toast.error('Invalid address', {hideProgressBar: true,theme: "white"}) : null;
       try {
-        let amountToSend = selectedToken == 'ETH' ? toWei(transferAmount) : Number(transferAmount);
         await trackPromise(
-          state.walletContract.methods.createTransferRequest(selectedToken, address, amountToSend, state.selectedWallet).send({ from: account.data })
+          state.walletContract.methods.createTransferRequest(selectedToken, address, toWei(transferAmount), state.selectedWallet).send({ from: account.data })
         )
         setAddress('');
         const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();

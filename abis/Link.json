@@ -7040,10 +7040,16 @@
       "links": {},
       "address": "0x2a23Fc078c74051b6aFa23265327aa46E07BD50E",
       "transactionHash": "0x6583579ef070d6ffd111c68d77178217599ff58db000d12d07d7322b187d515c"
+    },
+    "11155111": {
+      "events": {},
+      "links": {},
+      "address": "0xD1F375654d4f46419636b932126967A2f03273BF",
+      "transactionHash": "0x4ead886cfa1779606a5398498a18065c07318c82fa257c0738ad2f08ff4a4dec"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-09-22T07:04:00.469Z",
+  "updatedAt": "2022-09-22T17:11:01.956Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

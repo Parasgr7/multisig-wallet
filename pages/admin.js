@@ -97,9 +97,9 @@ export default function Admin() {
           </div>
           {walletDetails.data ? walletDetails.data.map((element, index)=>{
             return(
-              <div className="text-lg px-2 w-48 py-2 m-5 bg-violet-200 text-violet-900 rounded-lg">
+              <div className="text-lg px-2 w-48 py-2 m-5 bg-violet-200 break-words text-violet-900 rounded-lg">
                 <b className="uppercase">{tokenList[index]} :</b> &nbsp;
-                  {tokenList[index] == "Ether" ? toEther(element) : element}
+                  {toEther(element)}
               </div>
             )
           }): null}

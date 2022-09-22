@@ -43489,10 +43489,368 @@
       "links": {},
       "address": "0xe745c2319cBfdA44ee75AbF8Cf1BcdCBf2DED722",
       "transactionHash": "0xdf71a94ce1619d9d0ac0f15279b3c861ac116ae863c184b3de256a6df8fac51a"
+    },
+    "11155111": {
+      "events": {
+        "0x41751252894a74bd975de630158c4e47bb25c36d9ce7ad90383d86d391d2be12": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "depositId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "fundsDeposited",
+          "type": "event"
+        },
+        "0xdeea4c72b502b4bd7dce3c793e57c46bb32f3b2f66613d54a765e7585f520a2c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "approvals",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "fundsTransfered",
+          "type": "event"
+        },
+        "0x6a647eacc9e98792655e8dba08e3167440b93e02ef76e8e3330fa10a27b4ecbf": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "withdrawalId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "fundsWithdrawed",
+          "type": "event"
+        },
+        "0xe6887a88bb2477605d9b68e33f64a263587018a6a232f3b234ba1b78c96b84f2": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "tokenAdded",
+          "type": "event"
+        },
+        "0xead8052a59bd99f1b0115f4da8e862ebc15be06d11ad168b737b8e6dae0886c8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "approvals",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "transferApproved",
+          "type": "event"
+        },
+        "0x88ac4e01306872c0a5f289baf13af804eedb981db2018261cf8afed94bd9e19b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "approvals",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "transferCancelled",
+          "type": "event"
+        },
+        "0x9cc5df05955d08828d561f92ad3f6b82c78a55cf7d3dedacffacc4f694faf9be": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "ticker",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "approvals",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "transferCreated",
+          "type": "event"
+        },
+        "0x43abcff3409244ec1056224394af5f818e9a74866f0a11bfee2ad52f68ad6fb9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "ownerAdded",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "walletOwnerAdded",
+          "type": "event"
+        },
+        "0xd1f329271e4a98b0181a7d91618a0a5de6f42a1aaf4c1362493d829eaf405a8a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "removedBy",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "ownerRemoved",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeOfTransaction",
+              "type": "uint256"
+            }
+          ],
+          "name": "walletOwnerRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xdeBCD8585811ff0dF4490Da7504443e436B05217",
+      "transactionHash": "0xb4bfe9cb31315f0b6b148840077f20c6d6e5aef72dc74f77dcb526ee36005089"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-09-22T07:04:00.324Z",
+  "updatedAt": "2022-09-22T17:11:01.894Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
