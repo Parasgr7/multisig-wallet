@@ -76,7 +76,7 @@ export default function Navbar() {
                       <ul className="dd-menu">
                         {state.tokenList? state.tokenList.map((element, index) => {
                           return (
-                          <li id={index} onClick={() => setSelectedToken(element)}>{element}</li>
+                          <li key={index} onClick={() => setSelectedToken(element)}>{element}</li>
                           )
                         }): null }
 

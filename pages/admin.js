@@ -19,7 +19,7 @@ export default function Admin() {
   const { walletDetails } = useWalletDetails();
   const { account } = useAccount();
   const {state} = useWeb3();
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState("");
   const tokenList = ['Ether', 'Link', 'Dai'];
 
   const toEther = (value) => {
@@ -97,7 +97,7 @@ export default function Admin() {
           </div>
           {walletDetails.data ? walletDetails.data.map((element, index)=>{
             return(
-              <div className="text-lg px-2 w-48 py-2 m-5 bg-violet-200 break-words text-violet-900 rounded-lg">
+              <div key={index} className="text-lg px-2 w-48 py-2 m-5 bg-violet-200 break-words text-violet-900 rounded-lg">
                 <b className="uppercase">{tokenList[index]} :</b> &nbsp;
                   {toEther(element)}
               </div>
@@ -127,7 +127,7 @@ export default function Admin() {
           { ownerList.data ? ownerList.data.map((element, index) => {
             return (
                 <>
-                  <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
+                  <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
 
                       <td className="py-4 px-6">
                       {element.owners}

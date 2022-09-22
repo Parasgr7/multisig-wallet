@@ -63,7 +63,7 @@ export default function Wallet({ walletList, accountAddr}) {
       <div className="flex flex-wrap -mb-4 my-10 items-center justify-center">
         { walletList ? walletList.map((element, index) => {
           return(
-            <div className="block w-1/3 mb-2 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
+            <div key={index} className="block w-1/3 mb-2 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
               <div className="py-3 px-6 font-semibold border-b border-gray-300">
                 Wallet {index + 1}
               </div>

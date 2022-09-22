@@ -193,7 +193,7 @@ export default function Accounts() {
             date.setUTCSeconds(element.timeOfTransaction)
             return (
                 <>
-                  <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
+                  <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
                       <td className="py-4 px-6">
                         {index}
                       </td>

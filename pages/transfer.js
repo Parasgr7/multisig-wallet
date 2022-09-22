@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Transfer() {
-  const [address, setAddress] = useState(null);
+  const [address, setAddress] = useState("");
   const [pendingTab, setPendingTabActive] = useState(true);
   const [cancelledTab, setCancelledTabActive] = useState(null);
 
@@ -149,12 +149,12 @@ export default function Transfer() {
              <div className="text-base font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                  <ul className="flex flex-wrap -mb-px justify-center items-center">
 
-                     <li className="w-80">
+                     <li id="pending" className="w-80">
                          <a
                            className={pendingTab ? 'text-blue-600 border-b-2 inline-block p-4 rounded-t-lg border-blue-600 dark:text-blue-500 dark:border-blue-500': 'inline-block p-4 rounded-t-lg border-blue-600 dark:text-blue-500 dark:border-blue-500'}
                            onClick={() => {setPendingTabActive(true); setCancelledTabActive(null) }}>Pending for Approval</a>
                      </li>
-                     <li className="w-80">
+                     <li id="cancel" className="w-80">
                          <a
                            className={cancelledTab ? 'text-blue-600 border-b-2 inline-block p-4 rounded-t-lg border-blue-600 dark:text-blue-500 dark:border-blue-500': 'inline-block p-4 rounded-t-lg border-blue-600 dark:text-blue-500 dark:border-blue-500'}
                            onClick={() => {setCancelledTabActive(true); setPendingTabActive(null)}}>Cancel Transaction</a>
@@ -209,7 +209,7 @@ export default function Transfer() {
                      date.setUTCSeconds(element.timeOfTransaction)
                      return (
                          <>
-                           <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
+                           <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
                                <td className="py-4 px-6">
                                  {element.id}
                                </td>
@@ -295,7 +295,7 @@ export default function Transfer() {
                        date.setUTCSeconds(element.timeOfTransaction)
                        return (
                            <>
-                             <tr id={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
+                             <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" >
                                  <td className="py-4 px-6">
                                    {element.id}
                                  </td>
