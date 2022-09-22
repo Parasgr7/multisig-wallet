@@ -108,7 +108,7 @@ export default function Accounts() {
     <>
     <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
     <LoadingSpinerComponent/>
-    <div class="flex my-10 items-center justify-center">
+    <div className="flex my-10 items-center justify-center">
       <div className="block w-96 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
         <div className="py-3 px-6 font-semibold border-b border-gray-300">
           Deposit
@@ -156,10 +156,10 @@ export default function Accounts() {
         </div>
       </div>
     </div>
-    <div class="grid my-10 items-center justify-center">
+    <div className="grid my-10 items-center justify-center">
       { result && result.length > 0 ? <h1 className="text-3xl font-light">Account Transactions</h1> : null}
     </div>
-    <div class="grid items-center justify-center">
+    <div className="grid items-center justify-center">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         { result && result.length > 0 ?
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

@@ -54,13 +54,13 @@ export default function Wallet({ walletList, accountAddr}) {
           {walletList && walletList.length > 0 ? <h1 className="text-3xl font-light">My Wallets</h1> : null}
       </div>
 
-      <div class="flex flex-wrap -mb-4">
-        <div class="w-1/3 mb-4">
+      <div className="flex flex-wrap -mb-4">
+        <div className="w-1/3 mb-4">
         </div>
       </div>
 
 
-      <div class="flex flex-wrap -mb-4 my-10 items-center justify-center">
+      <div className="flex flex-wrap -mb-4 my-10 items-center justify-center">
         { walletList ? walletList.map((element, index) => {
           return(
             <div className="block w-1/3 mb-2 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
@@ -74,9 +74,9 @@ export default function Wallet({ walletList, accountAddr}) {
               </div>
               <div className="pb-2">
                 { element.walletAddress != state.selectedWallet ?
-                <svg className="h-12 w-12 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-4a4 4 0 0 1 8 0v4" /></svg>
+                <svg className="h-12 w-12 text-red-500"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-4a4 4 0 0 1 8 0v4" /></svg>
                 :
-                <svg class="h-12 w-12 text-green-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-5a4 4 0 0 1 8 0" /></svg>
+                <svg className="h-12 w-12 text-green-500"  width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-5a4 4 0 0 1 8 0" /></svg>
                 }
               </div>
               <div className="py-3 px-6 font-semibold border-t border-gray-300">

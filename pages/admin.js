@@ -67,7 +67,7 @@ export default function Admin() {
     <>
     <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
     <LoadingSpinerComponent/>
-    <div class="flex my-10 items-center justify-center">
+    <div className="flex my-10 items-center justify-center">
         <div className="w-full block w-96 mx-10 rounded-lg shadow-lg bg-white max-w-sm text-center">
           <div className="py-3 px-6 font-semibold border-b border-gray-300">
             New Owner
@@ -106,12 +106,12 @@ export default function Admin() {
 
         </div>
     </div>
-    <div class="grid my-10 items-center justify-center">
+    <div className="grid my-10 items-center justify-center">
       <h1 className="text-3xl font-light">
         Wallet Owners
       </h1>
     </div>
-    <div class="grid my-10 items-center justify-center">
+    <div className="grid my-10 items-center justify-center">
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>

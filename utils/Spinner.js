@@ -8,7 +8,7 @@ export const LoadingSpinerComponent = () => {
   return (
     <div className="">
       {promiseInProgress === true ? (
-        <div class="loading">
+        <div className="loading">
           <ReactLoading type={"spinningBubbles"} color={"#d11b85"} height={90} width={90}  />
         </div>
       ) : null}
