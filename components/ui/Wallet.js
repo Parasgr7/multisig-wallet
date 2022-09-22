@@ -63,14 +63,21 @@ export default function Wallet({ walletList, accountAddr}) {
       <div class="flex flex-wrap -mb-4 my-10 items-center justify-center">
         { walletList ? walletList.map((element, index) => {
           return(
-            <div className="block w-1/3 mb-4 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
+            <div className="block w-1/3 mb-2 mx-5 rounded-lg shadow-lg bg-white max-w-sm text-center">
               <div className="py-3 px-6 font-semibold border-b border-gray-300">
                 Wallet {index + 1}
               </div>
               <div className="p-6">
-                <p className="text-gray-500 text-medium mb-4 break-words">
+                <p className="text-gray-500 text-medium font-bold break-words">
                   {element.walletAddress}
                 </p>
+              </div>
+              <div className="pb-2">
+                { element.walletAddress != state.selectedWallet ?
+                <svg className="h-12 w-12 text-red-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-4a4 4 0 0 1 8 0v4" /></svg>
+                :
+                <svg class="h-12 w-12 text-green-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="5" y="11" width="14" height="10" rx="2" />  <circle cx="12" cy="16" r="1" />  <path d="M8 11v-5a4 4 0 0 1 8 0" /></svg>
+                }
               </div>
               <div className="py-3 px-6 font-semibold border-t border-gray-300">
                 { element.walletAddress == state.selectedWallet ?

@@ -34,6 +34,10 @@ a:hover {
   position: relative;
 }
 
+svg{
+  display: initial !important;
+}
+
 .active{
   background-color: #757f8f;
 }
