@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+
 import "./MultiSigFactory.sol";
 
 contract MultiSigWallet {
@@ -313,6 +315,26 @@ contract MultiSigWallet {
 
             }
         return walletBalance;
+    }
+
+    function getWalletDetails(address walletAddress) public view returns(uint[] memory) {
+        uint256[] memory walletDetails = new uint256[](tokenList.length);
+
+        MultiSigFactory factory = MultiSigFactory(factoryContractAddress);
+        MultiSigFactory.WalletUsers[] memory walletOwners = factory.getWalletOwners(walletAddress);
+
+
+        for (uint j = 0; j< tokenList.length; j++)
+        {
+          uint walletBalance;
+          for (uint i = 0; i < walletOwners.length; i++) {
+              walletBalance += balance[walletAddress][walletOwners[i].owners][tokenList[j]];
+            }
+            walletDetails[j] = walletBalance;
+        }
+
+
+        return walletDetails;
     }
 
     function getApprovalLimit(address walletAddress) public view returns (uint) {

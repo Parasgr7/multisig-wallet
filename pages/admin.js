@@ -1,6 +1,7 @@
 import {
   useOwnerList,
-  useAccount
+  useAccount,
+  useWalletDetails
 } from "../components/hooks/web3";
 import { useWeb3 } from "../components/providers/web3";
 import { useEffect, useState } from "react";
@@ -15,9 +16,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Admin() {
   const { ownerList } = useOwnerList();
+  const { walletDetails } = useWalletDetails();
   const { account } = useAccount();
   const {state} = useWeb3();
   const [address, setAddress] = useState(null);
+  const tokenList = ['Ether', 'Link', 'Dai'];
+
+  const toEther = (value) => {
+    return state.web3.utils.fromWei(value.toString(), 'ether');
+  };
 
   const removeSelectedOwner = async(accountAddress) => {
 
@@ -61,7 +68,7 @@ export default function Admin() {
     <ToastContainer position="bottom-right" toastStyle={{ backgroundColor: "#2e2d29" }}/>
     <LoadingSpinerComponent/>
     <div class="flex my-10 items-center justify-center">
-        <div className="w-full block w-96 rounded-lg shadow-lg bg-white max-w-sm text-center">
+        <div className="w-full block w-96 mx-10 rounded-lg shadow-lg bg-white max-w-sm text-center">
           <div className="py-3 px-6 font-semibold border-b border-gray-300">
             New Owner
           </div>
@@ -83,6 +90,20 @@ export default function Admin() {
               Add Owner
             </button>
           </div>
+        </div>
+        <div className=" block mx-10 rounded-lg shadow-lg bg-white max-w-sm text-center">
+          <div className="py-3 px-6 font-semibold border-b border-gray-300">
+            Wallet Details
+          </div>
+          {walletDetails.data ? walletDetails.data.map((element, index)=>{
+            return(
+              <div className="text-lg px-2 w-48 py-2 m-5 bg-violet-200 text-violet-900 rounded-lg">
+                <b className="uppercase">{tokenList[index]} :</b> &nbsp;
+                  {tokenList[index] == "Ether" ? toEther(element) : element}
+              </div>
+            )
+          }): null}
+
         </div>
     </div>
     <div class="grid my-10 items-center justify-center">
@@ -125,6 +146,7 @@ export default function Admin() {
 
           </tbody>
       </table>
+
     </div>
 
     </>

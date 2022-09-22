@@ -26,10 +26,22 @@ export default function Transfer() {
   const { account } = useAccount();
   const { state, selectedToken, setBalance } = useWeb3();
 
+  const toWei = (value) => {
+    return state.web3.utils.toWei(value.toString(), 'ether');
+  };
+  const toEther = (value) => {
+    return state.web3.utils.fromWei(value.toString(), 'ether');
+  };
+
   const createTransfer = async() => {
+      if (transferAmount <= 0){
+        toast.error('Enter correct amount ', {hideProgressBar: true,theme: "white"}) ;
+        setTransferAmount('');
+        return;
+      }
       !state.web3.utils.isAddress(address) ? toast.error('Invalid address', {hideProgressBar: true,theme: "white"}) : null;
       try {
-        let amountToSend = state.web3.utils.toWei(transferAmount, "ether");
+        let amountToSend = selectedToken == 'ETH' ? toWei(transferAmount) : Number(transferAmount);
         await trackPromise(
           state.walletContract.methods.createTransferRequest(selectedToken, address, amountToSend, state.selectedWallet).send({ from: account.data })
         )
@@ -37,6 +49,7 @@ export default function Transfer() {
         const balance = await state.walletContract.methods.getBalance(selectedToken, state.selectedWallet).call();
         setBalance(state.web3.utils.fromWei(balance, "ether"));
         setTransferAmount('');
+
       } catch(e){
         if (e.code === 4001){
              toast.error('Transaction Rejected!!!', {hideProgressBar: true,theme: "white"});
@@ -208,7 +221,7 @@ export default function Transfer() {
                                  {element.receiver.slice(0,7) + "..." + element.receiver.slice(element.receiver.length-10)}
                                </td>
                                <td className="py-4 px-6">
-                                 {element.amount}
+                                 {element.ticker == 'ETH' ? toEther(element.amount) : element.amount }
                                </td>
                                <td className="py-4 px-6">
                                  {element.ticker}
@@ -294,7 +307,7 @@ export default function Transfer() {
                                    {element.receiver.slice(0,7) + "..." + element.receiver.slice(element.receiver.length-10)}
                                  </td>
                                  <td className="py-4 px-6">
-                                   {element.amount}
+                                   { element.ticker == 'ETH' ? toEther(element.amount) : element.amount }
                                  </td>
                                  <td className="py-4 px-6">
                                    {element.ticker}

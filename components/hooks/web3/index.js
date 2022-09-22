@@ -54,6 +54,14 @@ export const useTransferRequest = () => {
 
 };
 
+export const useWalletDetails = () => {
+  const walletDetails = useHooks((hooks) => hooks.useWalletDetails)();
+  console.log(walletDetails);
+  return {
+    walletDetails
+  };
+};
+
 export const useWalletList = () => {
   const walletList = useHooks((hooks) => hooks.useWalletList)();
 

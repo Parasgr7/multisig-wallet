@@ -11,6 +11,7 @@ export const handler = (web3, contract) => {
         const account = accounts[0];
         const wallet_list = await contract.methods.getOwnerWallets(account).call();
 
+
         return wallet_list;
       }
     );

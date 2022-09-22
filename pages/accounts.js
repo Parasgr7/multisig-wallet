@@ -12,7 +12,6 @@ import { LoadingSpinerComponent } from "../utils/Spinner";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 export default function Accounts() {
   const [depositAmount, setDepositAmount] = useState(null);
   const [withdrawAmount, setWithdrawAmount] = useState(null);
@@ -20,14 +19,21 @@ export default function Accounts() {
   const { account } = useAccount();
   const { result } = useAccountRequest();
 
-  const deposit = async() => {
+  const toWei = (value) => {
+    return state.web3.utils.toWei(value.toString(), 'ether');
+  };
 
+  const deposit = async() => {
+    if (depositAmount <= 0){
+      toast.error('Enter correct amount ', {hideProgressBar: true,theme: "white"}) ;
+      setDepositAmount('');
+      return;
+    }
     if(selectedToken == "ETH")
     {
-      let amountToSend = state.web3.utils.toWei(depositAmount, "ether");
       try{
         await trackPromise(
-          state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data, value: amountToSend})
+          state.walletContract.methods.deposit( selectedToken , Number(depositAmount) , state.selectedWallet).send({ from: account.data, value: toWei(depositAmount)})
         )
       }catch(e){
         if (e.code === 4001){
@@ -43,12 +49,12 @@ export default function Accounts() {
     else {
       const contract = selectedToken == "LINK" ? state.LinkContract : state.DaiContract;
       await trackPromise(
-          contract.methods.approve(state.walletContract._address, depositAmount).send({ from: account.data })
+          contract.methods.approve(state.walletContract._address, Number(depositAmount)).send({ from: account.data })
       )
 
       try{
         await trackPromise(
-          state.walletContract.methods.deposit( selectedToken , depositAmount , state.selectedWallet).send({ from: account.data})
+          state.walletContract.methods.deposit( selectedToken ,  Number(depositAmount) , state.selectedWallet).send({ from: account.data})
         )
       }catch(e){
         if (e.code === 4001){
@@ -70,6 +76,11 @@ export default function Accounts() {
   }
   const withdraw = async() => {
     let amountToWithdraw;
+    if (withdrawAmount <= 0){
+      toast.error('Enter correct amount ', {hideProgressBar: true,theme: "white"}) ;
+      setWithdrawAmount('');
+      return;
+    }
     if(selectedToken == "ETH")
     {
       amountToWithdraw = state.web3.utils.toWei(withdrawAmount, "ether");
