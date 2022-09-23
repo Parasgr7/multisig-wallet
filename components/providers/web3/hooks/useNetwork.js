@@ -12,22 +12,19 @@ const NETWORKS = {
 };
 
 export const handler = (web3) => () => {
-
   const { data, error, mutate, ...rest } = useSWR(
     () => (web3 ? "web3/network" : null),
     async () => {
       const chainId = await web3.eth.getChainId();
 
       if (!chainId) {
-        throw new Error("Cannot retrieve network. Please reload your browser")
-
+        throw new Error("Cannot retrieve network. Please reload your browser");
       }
       return NETWORKS[chainId];
     }
   );
 
   const targetNetwork = NETWORKS["42"];
-
 
   return {
     data,

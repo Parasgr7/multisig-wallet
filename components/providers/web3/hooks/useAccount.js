@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import useSWR from "swr";
 
 export const handler = (web3 = null, provider = null) => {
-  return () =>  {
-
+  return () => {
     const { mutate, data, error, ...rest } = useSWR(
       () => (web3 ? "web3/accounts" : null),
       async () => {

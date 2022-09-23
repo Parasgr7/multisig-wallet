@@ -11,7 +11,18 @@ const setListeners = (provider) => {
 };
 
 export default function Web3Provider({ children }) {
-  const createWeb3State = ({ web3, provider, factoryContract, walletContract, LinkContract, DaiContract, isLoading, selectedWallet, tokenList, selectedToken}) => {
+  const createWeb3State = ({
+    web3,
+    provider,
+    factoryContract,
+    walletContract,
+    LinkContract,
+    DaiContract,
+    isLoading,
+    selectedWallet,
+    tokenList,
+    selectedToken,
+  }) => {
     return {
       web3,
       provider,
@@ -22,7 +33,13 @@ export default function Web3Provider({ children }) {
       isLoading,
       selectedWallet,
       tokenList,
-      hooks: setupHooks({ web3, provider, factoryContract, walletContract, selectedWallet }),
+      hooks: setupHooks({
+        web3,
+        provider,
+        factoryContract,
+        walletContract,
+        selectedWallet,
+      }),
     };
   };
 
@@ -34,7 +51,6 @@ export default function Web3Provider({ children }) {
       walletContract: null,
       isLoading: true,
       tokenList: null,
-
     })
   );
 
@@ -51,10 +67,21 @@ export default function Web3Provider({ children }) {
         const factoryContract = await loadContract("MultiSigFactory", web3);
         const LinkContract = await loadContract("LINK", web3);
         const DaiContract = await loadContract("DAI", web3);
-        const tokenList = walletContract ? await walletContract.methods.getTokenList().call() : null;
+        const tokenList = walletContract
+          ? await walletContract.methods.getTokenList().call()
+          : null;
         setBalance(null);
         setWeb3Api(
-          createWeb3State({ web3, provider, factoryContract, walletContract, LinkContract, DaiContract, isLoading: false, tokenList })
+          createWeb3State({
+            web3,
+            provider,
+            factoryContract,
+            walletContract,
+            LinkContract,
+            DaiContract,
+            isLoading: false,
+            tokenList,
+          })
         );
         setListeners(provider);
       } else {
@@ -67,7 +94,8 @@ export default function Web3Provider({ children }) {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3, provider, isLoading, factoryContract, walletContract } = web3Api;
+    const { web3, provider, isLoading, factoryContract, walletContract } =
+      web3Api;
 
     return {
       ...web3Api,
@@ -75,7 +103,7 @@ export default function Web3Provider({ children }) {
       connect: provider
         ? async () => {
             try {
-              console.log(provider)
+              console.log(provider);
               console.log("Trying to connect to metamask");
               await provider.request({
                 method: "eth_requestAccounts",
@@ -92,7 +120,15 @@ export default function Web3Provider({ children }) {
   // Return another instance of _web3Api if web3Api changes
 
   return (
-    <Web3Context.Provider value={{state:_web3Api, selectedToken, setSelectedToken, balance, setBalance}}>
+    <Web3Context.Provider
+      value={{
+        state: _web3Api,
+        selectedToken,
+        setSelectedToken,
+        balance,
+        setBalance,
+      }}
+    >
       {children}
     </Web3Context.Provider>
   );

@@ -1,7 +1,7 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import Wallet from "../components/ui/Wallet"
-import { useEffect, useState } from "react"
+import Head from "next/head";
+import Image from "next/image";
+import Wallet from "../components/ui/Wallet";
+import { useEffect, useState } from "react";
 import {
   useAccount,
   useTransferRequest,
@@ -22,13 +22,18 @@ export default function Home() {
         <title>MultiSigWallet DApp</title>
       </Head>
       {!state.isLoading ? (
-        account.data ?
-        (<>
-          <Wallet walletList = {walletList.data} accountAddr = {account.data} />
-        </>)
-           : state.requireInstall ? (
+        account.data ? (
+          <>
+            <Wallet walletList={walletList.data} accountAddr={account.data} />
+          </>
+        ) : state.requireInstall ? (
           <div className="w-full grid h-screen place-items-center bg-black text-white">
-            <button onClick={() => {window.open('https://metamask.io/download/', '_blank')}} className="border border-white p-2 rounded-md">
+            <button
+              onClick={() => {
+                window.open("https://metamask.io/download/", "_blank");
+              }}
+              className="border border-white p-2 rounded-md"
+            >
               Install metamask
             </button>
           </div>
@@ -49,7 +54,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
     </div>
-  )
+  );
 }
