@@ -16,7 +16,7 @@ Smart Contract is deployed on the Ethereum Sepolia Network.
 * Integration with web3 wallets (Metamask)
 * Interacting with any contracts with UI support
 * User can create a transaction which will deposit Eth or ERC20 tokens in the receivers account.
-* **Multisig Wallet n-of-m**: Transactions require some of the keys, but not necessarily all of them, to be authorized (1-of-2, 2-of-3, 3-of-5 etc.).
+* **Multisig Wallet (m-1)-of-m**: Transactions require some of the keys, but not necessarily all of them, to be authorized (1-of-2, 2-of-3, 4-of-5 etc.).
 
 
 # Technologies
