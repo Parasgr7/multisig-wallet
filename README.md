@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Multi-Signature Wallet DApp
+A MultiSig wallet is a digital wallet that operates with multisignature addresses. This means that it requires more than one private key to sign and authorize a crypto transaction.
 
-## Getting Started
+A decentralised multisignature crypto digital wallet helps users to create multiple wallets and add multiple owners. It even enables the user to deposit and withdraw ETH, and multiple other ERC20 token in the wallet and lets user to send a transaction that needs to be approved by other owners of the wallet.
 
-First, run the development server:
+Smart Contract is deployed on the Ethereum Sepolia Network.
 
-```bash
-npm run dev
-# or
-yarn dev
+![multisigwallet-functioning](https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/HX2VPWTONNDWVPOLCFVD3X2YHM.png)
+
+# Features
+
+* The contract supports ETh & 2 test tokens; DAI, LINK
+* User can create new wallets and Add or Remove Owners to the wallet
+* User can deposit and withdraw Eth and tokens in wallet.
+* Usage of **Factory Contract**: A factory contract deploy a new smart contract from a smart contract class. In this way, it can deploy multiple smart contracts with different parameters directly from the blockchain itself
+* Integration with web3 wallets (Metamask)
+* Interacting with any contracts with UI support
+* User can create a transaction which will deposit Eth or ERC20 tokens in the receivers account.
+* **Multisig Wallet n-of-m**: Transactions require some of the keys, but not necessarily all of them, to be authorized (1-of-2, 2-of-3, 3-of-5 etc.).
+
+
+# Technologies
+1. **Open Zeppelin**: The contract uses IERC20 of OpenZeppelin create an instance of a token and also, it uses the Ownable contract of the OpenZepppelin to ensure security of the contract
+3. **Truffle**: Truffle is a development environment, asset pipeline, and testing framework for developing smart contracts.
+4. **Ganache**: Ganache is used as blockchain for local testing. 
+5. **Next JS**: Next JS is the front end framework used to ensure flexible user interaction.
+6. **Tailwind CSS**
+7. **Metamask**
+8. **web3.js**
+
+
+# Programming Languages
+1. Solidity
+2. Truffle
+3. Javascript
+4. Next.js
+
+# What to Install
+1. Tailwind CSS: Install tailwind css [here](https://tailwindcss.com/docs/installation)
+
+# How to use
+1. To deploy solidity smart contract on Sepolia Network
 ```
+truffle deploy --network sepolia
+```
+2. Deploy Smart Contract on local blockchain using Ganache
+```
+truffle migrate --reset
+```
+3. Start the Server
+```
+npm run dev
+```
+ # Developer
+ Let's Connect! 👋 👋 
+ ```
+ Paras Gaur - 
+    Email - parasgr484@gmail.com
+    Linkedin - https://www.linkedin.com/in/paras-gaur/
+    Website - https://paras-portfolio-flame.vercel.app/
+ ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
